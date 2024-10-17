@@ -1,12 +1,12 @@
 <template>
-<div id="main-content">
-  <RouterView id="main-view"/>
-  <SideContents id="side-view"/>
-</div>
+  <div id="main-content">
+    <RouterView id="main-view" />
+    <SideContents id="side-view" />
+  </div>
 </template>
 <script setup>
-import { RouterView } from 'vue-router'
-import SideContents from './contents/SideContents.vue';
+import { RouterView } from "vue-router";
+import SideContents from "./contents/SideContents.vue";
 </script>
 <style scoped>
 #main-content {

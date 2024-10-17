@@ -1,5 +1,11 @@
 <script setup>
-import { TopBar, NavBar, Footer, MainArea, AdditionalContent } from './components';
+import {
+  TopBar,
+  NavBar,
+  Footer,
+  MainArea,
+  AdditionalContent,
+} from "./components";
 </script>
 
 <template>

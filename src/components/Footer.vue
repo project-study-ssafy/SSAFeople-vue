@@ -1,9 +1,7 @@
 <template>
-<div id="footer">
-</div>
+  <div id="footer"></div>
 </template>
-<script setup>
-</script>
+<script setup></script>
 <style scoped>
 #footer {
   width: 100%;

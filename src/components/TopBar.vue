@@ -1,11 +1,10 @@
 <template>
-<div id="topbar">
-  <!-- 로고 -->
-  <!-- 검색창 -->
-</div>
+  <div id="topbar">
+    <!-- 로고 -->
+    <!-- 검색창 -->
+  </div>
 </template>
-<script setup>
-</script>
+<script setup></script>
 <style scoped>
 #topbar {
   /* max-width: 1280px; */

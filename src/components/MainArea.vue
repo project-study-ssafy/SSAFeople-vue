@@ -1,11 +1,10 @@
 <template>
-<div id="main-area">
-  <MainContent />
-</div>
+  <div id="main-area">
+    <MainContent />
+  </div>
 </template>
 <script setup>
-import { MainContent } from '.';
-
+import { MainContent } from ".";
 </script>
 <style scoped>
 #main-area {
