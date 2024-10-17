@@ -1,15 +1,17 @@
 <template>
-  <nav class="navbar">
-    <div class="navbar-brand">
-      <router-link to="/" class="navbar-item">로고</router-link>
-    </div>
-    <div class="navbar-menu">
-      <div class="navbar-start">
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
+  <div class="navbar">
+    <nav class="navigation">
+      <div class="navbar-brand">
+        <router-link to="/" class="navbar-item">로고</router-link>
       </div>
-    </div>
-  </nav>
+      <div class="navbar-menu">
+        <div class="navbar-start">
+          <RouterLink to="/">Home</RouterLink>
+          <RouterLink to="/about">About</RouterLink>
+        </div>
+      </div>
+    </nav>
+  </div>
 </template>
 
 <script>
@@ -20,8 +22,9 @@ export default {
 </script>
 
 <style scoped>
-.navbar {
-  /* max-width: 1280px; */
+.navigation {
+  max-width: 1280px;
+  height: 100%;
   margin: 0 auto;
   background-color: #333;
   color: white;
