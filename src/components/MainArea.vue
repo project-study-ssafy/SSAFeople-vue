@@ -1,15 +1,13 @@
 <template>
-  <div id="main-area">
-    <MainContent />
+  <div
+    class="grid grid-cols-[1fr_minmax(1148px,_1280px)_1fr] gap-x-3 bg-blue-400"
+  >
+    <div class="col-span-1"></div>
+    <MainContent class="col-span-1" />
+    <AdditionalContent class="col-span-1" />
   </div>
 </template>
 <script setup>
-import { MainContent } from ".";
+import { MainContent, AdditionalContent } from ".";
 </script>
-<style scoped>
-#main-area {
-  border: 1px solid black;
-  display: flex;
-  flex-direction: column; /* 세로 방향으로 배치 */
-}
-</style>
+<style scoped></style>

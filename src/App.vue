@@ -1,33 +1,16 @@
 <script setup>
-import {
-  TopBar,
-  NavBar,
-  Footer,
-  MainArea,
-  AdditionalContent,
-} from "./components";
+import { TopBar, NavBar, Footer, MainArea } from "./components";
 </script>
 
 <template>
-  <TopBar />
-  <NavBar />
-  <div class="app-container flex mx-auto w-[1280px] border-2 border-rose-300">
-    <MainArea />
-    <AdditionalContent />
+  <div
+    class="min-w-[1750px] grid grid-cols-[1fr_minmax(1148px,_1280px)_1fr] gap-x-3 bg-blue-400"
+  >
+    <TopBar class="col-span-3" />
+    <NavBar class="col-span-3" />
+    <MainArea class="col-span-3" />
+    <Footer class="col-span-3" />
   </div>
-  <Footer />
 </template>
 
-<style scoped>
-#main-area {
-  width: 1280px;
-  min-width: 1280px;
-}
-
-#additional-area {
-  width: 200px; /* 고정 너비 (필요에 따라 조정) */
-  min-width: 200px;
-  height: 300px; /* 전체 화면 높이 */
-  background-color: #f0f0f0; /* 배경색 (선택적) */
-}
-</style>
+<style scoped></style>

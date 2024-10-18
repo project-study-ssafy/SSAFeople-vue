@@ -20,7 +20,7 @@ const router = createRouter({
       path: "/",
       name: "board",
       component: () =>
-        import("../components/MainArea/Contents/Boards/TestBoard.vue"),
+        import("@/components/MainArea/Contents/Boards/TestBoard.vue"),
     },
   ],
 });

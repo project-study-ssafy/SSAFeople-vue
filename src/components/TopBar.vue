@@ -1,18 +1,13 @@
 <template>
-  <div id="topbar w-full min-w-[1280px] h-20">
-    <div id="topbar-content">
+  <div class="grid grid-cols-[1fr_minmax(1148px,_1280px)_1fr] bg-lime-300">
+    <div class="col-span-1"></div>
+    <div class="col-span-1 w-full mx-auto bg-orange-400 text-white">
       <!-- 로고 -->
       this is topbar
       <!-- 검색창 -->
     </div>
+    <div class="col-span-1"></div>
   </div>
 </template>
 <script setup></script>
-<style scoped>
-#topbar-content {
-  max-width: 1280px;
-  height: 100%;
-  margin: 0 auto;
-  border: 1px solid red;
-}
-</style>
+<style scoped></style>

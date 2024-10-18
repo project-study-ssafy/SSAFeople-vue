@@ -1,6 +1,9 @@
 <template>
-  <div class="navbar w-full min-w-[1280px] h-20">
-    <nav class="navigation">
+  <div class="grid-cols-[1fr_minmax(1148px,_1280px)_1fr] bg-orange-300">
+    <div class="col-span-1"></div>
+    <nav
+      class="col-span-1 w-full min-w-[1148px] max-w-[1280px] h-20 mx-auto bg-slate-700 text-white"
+    >
       <div class="navbar-brand">
         <router-link to="/" class="navbar-item">로고</router-link>
       </div>
@@ -11,6 +14,7 @@
         </div>
       </div>
     </nav>
+    <div class="col-span-1"></div>
   </div>
 </template>
 
@@ -22,15 +26,6 @@ export default {
 </script>
 
 <style scoped>
-.navigation {
-  max-width: 1280px;
-  height: 100%;
-  margin: 0 auto;
-  background-color: #333;
-  color: white;
-  border: 1px solid blue;
-}
-
 .navbar-item {
   color: white;
   text-decoration: none;
