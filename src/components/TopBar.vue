@@ -1,5 +1,5 @@
 <template>
-  <div id="topbar">
+  <div id="topbar w-full min-w-[1280px] h-20">
     <div id="topbar-content">
       <!-- 로고 -->
       this is topbar

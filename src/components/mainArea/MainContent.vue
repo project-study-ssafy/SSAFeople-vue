@@ -6,7 +6,7 @@
 </template>
 <script setup>
 import { RouterView } from "vue-router";
-import SideContents from "./contents/SideContents.vue";
+import { SideContents } from "..";
 </script>
 <style scoped>
 #main-content {

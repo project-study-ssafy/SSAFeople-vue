@@ -11,7 +11,7 @@ import {
 <template>
   <TopBar />
   <NavBar />
-  <div class="app-container">
+  <div class="app-container flex mx-auto w-[1280px] border-2 border-rose-300">
     <MainArea />
     <AdditionalContent />
   </div>
@@ -19,31 +19,6 @@ import {
 </template>
 
 <style scoped>
-.app-container {
-  display: flex; /* 가로로 배치 */
-  margin: 0 auto; /* 중앙 정렬 */
-  width: 1280px;
-  border: 1px solid yellow;
-}
-
-.navbar {
-  width: 100%;
-  min-width: 1280px;
-  height: 100px;
-}
-
-#topbar {
-  width: 100%;
-  min-width: 1280px;
-  height: 100px;
-}
-
-#footer {
-  width: 100%;
-  min-width: 1280px;
-  height: 100px;
-}
-
 #main-area {
   width: 1280px;
   min-width: 1280px;

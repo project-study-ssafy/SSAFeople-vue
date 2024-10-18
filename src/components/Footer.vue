@@ -1,11 +1,5 @@
 <template>
-  <div id="footer"></div>
+  <div id="footer w-full min-w-[1280px] h-20"></div>
 </template>
 <script setup></script>
-<style scoped>
-#footer {
-  width: 100%;
-  height: 100px;
-  border: 1px solid red;
-}
-</style>
+<style scoped></style>

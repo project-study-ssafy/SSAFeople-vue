@@ -1,5 +1,5 @@
 <template>
-  <div class="navbar">
+  <div class="navbar w-full min-w-[1280px] h-20">
     <nav class="navigation">
       <div class="navbar-brand">
         <router-link to="/" class="navbar-item">로고</router-link>
