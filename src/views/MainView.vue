@@ -8,6 +8,6 @@
   </div>
 </template>
 <script setup>
-import { MainContent, AdditionalContent } from ".";
+import { MainContent, AdditionalContent } from "../components";
 </script>
 <style scoped></style>

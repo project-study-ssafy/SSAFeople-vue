@@ -26,4 +26,29 @@ const tag = computed(() => {
 });
 </script>
 
-<style scoped></style>
+<style scoped>
+h1 {
+  font-size: 2rem;
+  font-weight: bold;
+}
+h2 {
+  font-size: 1.75rem;
+  font-weight: bold;
+}
+h3 {
+  font-size: 1.5rem;
+  font-weight: semi-bold;
+}
+h4 {
+  font-size: 1.25rem;
+  font-weight: normal;
+}
+h5 {
+  font-size: 1rem;
+  font-weight: normal;
+}
+h6 {
+  font-size: 0.875rem;
+  font-weight: normal;
+}
+</style>
