@@ -21,7 +21,7 @@
 <script>
 import { RouterLink } from "vue-router";
 export default {
-  name: "Navbar",
+  name: "MainNavigation",
 };
 </script>
 
