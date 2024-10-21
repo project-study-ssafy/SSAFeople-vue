@@ -5,12 +5,12 @@
     <div class="col-span-1"></div>
     <nav class="col-span-1 w-full h-20 bg-slate-700 text-white">
       <div class="navbar-brand">
-        <router-link to="/" class="navbar-item">로고</router-link>
+        <RouterLink to="/" class="navbar-item">로고</RouterLink>
       </div>
       <div class="navbar-menu">
         <div class="navbar-start">
-          <RouterLink to="/">Home</RouterLink>
-          <RouterLink to="/about">About</RouterLink>
+          <RouterLink to="/">홈</RouterLink>
+          <RouterLink to="/board">게시판</RouterLink>
         </div>
       </div>
     </nav>
@@ -18,11 +18,6 @@
   </div>
 </template>
 
-<script>
-import { RouterLink } from "vue-router";
-export default {
-  name: "MainNavigation",
-};
-</script>
+<script></script>
 
 <style scoped></style>

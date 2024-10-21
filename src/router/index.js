@@ -18,9 +18,25 @@ const router = createRouter({
     // }
     {
       path: "/",
-      name: "board",
-      component: () =>
-        import("@/components/MainContainer/Contents/Boards/TestBoard.vue"),
+      name: "Home",
+      component: () => import("@/views/MainView.vue"),
+      children: [
+        {
+          path: "/board",
+          component: () =>
+            import("@/components/MainContainer/Contents/Boards/TestBoard.vue"),
+        },
+        {
+          path: "/",
+          component: () =>
+            import("@/components/MainContainer/Contents/Boards/TestBoard.vue"),
+        },
+      ],
+    },
+    {
+      path: "/signup",
+      name: "Signup",
+      component: () => import("@/views/SignupView.vue"),
     },
   ],
 });

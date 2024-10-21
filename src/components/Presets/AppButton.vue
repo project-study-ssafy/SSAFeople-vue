@@ -1,39 +1,33 @@
 <template>
-  <button v-if="type === 'a'" class="btn-a">{{ text }}</button>
-  <button v-else-if="type === 'b'" class="btn-b">{{ text }}</button>
-  <button v-else class="btn-default">{{ text }}</button>
+  <button
+    v-if="type === 'square-border'"
+    class="bg-white text-[#3396F4] border border-[#3396F4] p-1"
+  >
+    {{ text }}
+  </button>
+  <button
+    v-else-if="type === 'ellipse-border'"
+    class="bg-white text-[#3396F4] border border-[#3396F4] p-1 rounded-full"
+  >
+    {{ text }}
+  </button>
+  <button
+    v-else-if="type === 'square-filled'"
+    class="bg-[#3396F4] p-1 text-white"
+  >
+    {{ text }}
+  </button>
+  <button
+    v-else-if="type === 'ellipse-filled'"
+    class="bg-[#3396F4] p-1 text-white rounded-full"
+  >
+    {{ text }}
+  </button>
 </template>
 <script setup>
 defineProps({
   type: String,
-  text: {
-    type: String,
-    required: true,
-  },
+  text: String,
 });
 </script>
-<style scoped>
-.btn-a {
-  background-color: red;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 5px;
-}
-
-.btn-b {
-  background-color: blue;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 5px;
-}
-
-.btn-default {
-  background-color: grey;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 5px;
-}
-</style>
+<style scoped></style>

@@ -1,5 +1,5 @@
 <script setup>
-import { MainHeader, MainNavigation, MainFooter, MainView } from "./components";
+import { MainHeader, MainNavigation, MainFooter } from "./components";
 </script>
 
 <template>
@@ -8,7 +8,7 @@ import { MainHeader, MainNavigation, MainFooter, MainView } from "./components";
   >
     <MainHeader class="col-span-3" />
     <MainNavigation class="col-span-3" />
-    <MainView class="col-span-3" />
+    <RouterView class="col-span-3" />
     <MainFooter class="col-span-3" />
   </div>
 </template>
