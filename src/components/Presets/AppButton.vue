@@ -1,33 +1,44 @@
 <template>
   <button
     v-if="type === 'square-border'"
-    class="bg-white text-[#3396F4] border border-[#3396F4] p-1"
+    @click="handleClick"
+    class="bg-white font-semibold text-[#3396F4] border border-[#3396F4] px-4 py-2 hover:bg-[#3396F4] hover:text-white transition-colors duration-300"
   >
     {{ text }}
   </button>
   <button
     v-else-if="type === 'ellipse-border'"
-    class="bg-white text-[#3396F4] border border-[#3396F4] p-1 rounded-full"
+    @click="handleClick"
+    class="bg-white font-semibold text-[#3396F4] border border-[#3396F4] rounded-md px-4 py-2 hover:bg-[#3396F4] hover:text-white transition-colors duration-300"
   >
     {{ text }}
   </button>
   <button
     v-else-if="type === 'square-filled'"
-    class="bg-[#3396F4] p-1 text-white"
+    @click="handleClick"
+    class="bg-[#3396F4] font-semibold text-white px-4 py-2 hover:bg-white hover:text-[#3396F4] border border-[#3396F4] transition-colors duration-300"
   >
     {{ text }}
   </button>
   <button
     v-else-if="type === 'ellipse-filled'"
-    class="bg-[#3396F4] p-1 text-white rounded-full"
+    @click="handleClick"
+    class="bg-[#3396F4] font-semibold text-white rounded-md px-4 py-2 hover:bg-white hover:text-[#3396F4] border border-[#3396F4] transition-colors duration-300"
   >
     {{ text }}
   </button>
 </template>
 <script setup>
-defineProps({
+const props = defineProps({
   type: String,
   text: String,
+  onClick: Function,
 });
+
+const handleClick = () => {
+  if (props.onClick) {
+    props.onClick();
+  }
+};
 </script>
 <style scoped></style>

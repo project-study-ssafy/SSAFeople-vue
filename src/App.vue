@@ -4,7 +4,7 @@ import { MainHeader, MainNavigation, MainFooter } from "./components";
 
 <template>
   <div
-    class="min-w-[1750px] grid grid-cols-[1fr_minmax(1148px,_1280px)_1fr] gap-x-3 bg-white"
+    class="min-w-[1280px] grid grid-cols-[1fr_minmax(1148px,_1280px)_1fr] gap-x-3 bg-white"
   >
     <MainHeader class="col-span-3" />
     <MainNavigation class="col-span-3" />

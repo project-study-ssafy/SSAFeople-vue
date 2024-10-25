@@ -29,7 +29,7 @@ const router = createRouter({
         {
           path: "/",
           component: () =>
-            import("@/components/MainContainer/Contents/Boards/TestBoard.vue"),
+            import("@/components/MainContainer/Contents/MainHome.vue"),
         },
       ],
     },
