@@ -1,6 +1,7 @@
 <template>
-  <UserProfile />
-  <hr />
+  <div>
+    <UserProfile />
+  </div>
 </template>
 <script setup>
 import { UserProfile } from "@/components";

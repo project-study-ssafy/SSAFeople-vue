@@ -1,8 +1,8 @@
 <template>
-  <div class="flex flex-col items-center bg-[#d0d0d0]">
+  <div class="flex flex-col items-center bg-[#ffffff]">
     <form
       @submit.prevent="signin"
-      class="w-full max-w-md bg-white p-8 flex flex-col items-center"
+      class="w-full max-w-md bg-white p-4 flex flex-col items-center border-[1px] rounded-3xl"
     >
       <div class="mb-2">
         <label for="email" class="block text-sm font-medium text-gray-700"
