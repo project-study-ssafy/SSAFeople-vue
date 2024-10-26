@@ -13,7 +13,7 @@
           id="email"
           v-model="userData.email"
           required
-          class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-500"
+          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-black outline-none focus:bg-transparent"
         />
       </div>
       <div class="mb-2">
@@ -25,15 +25,14 @@
           id="password"
           v-model="userData.password"
           required
-          class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-500"
+          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-black outline-none focus:bg-transparent"
         />
       </div>
-      <button
-        type="submit"
-        class="w-full bg-blue-500 text-white font-bold py-2 rounded-md hover:bg-blue-600 transition duration-200 mb-2"
-      >
-        로그인
-      </button>
+      <AppButton
+        button-type="ellipse-filled"
+        text="로그인"
+        class="w-full mb-2"
+      />
       <RouterLink to="/signup" class="font-semibold text-xs"
         >회원가입</RouterLink
       >
@@ -41,6 +40,7 @@
   </div>
 </template>
 <script setup>
+import { AppButton } from "@/components";
 import { ref } from "vue";
 const userData = ref({
   email: "",

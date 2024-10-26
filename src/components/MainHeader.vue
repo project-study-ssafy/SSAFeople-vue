@@ -1,6 +1,6 @@
 <template>
   <div
-    class="grid grid-cols-[1fr_minmax(1148px,_1280px)_1fr] bg-white h-32 border-[#EEEEEE] border-b-[1px]"
+    class="grid grid-cols-[1fr_minmax(1148px,_1280px)_1fr] bg-white h-32 border-[#EEEEEE] border-b-2"
   >
     <div class="col-span-1"></div>
     <div class="col-span-1 w-full text-white flex flex-row items-center">
