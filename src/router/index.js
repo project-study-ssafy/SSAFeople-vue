@@ -22,14 +22,39 @@ const router = createRouter({
       component: () => import("@/views/MainView.vue"),
       children: [
         {
-          path: "/board",
-          component: () =>
-            import("@/components/MainContainer/Contents/Boards/TestBoard.vue"),
-        },
-        {
           path: "/",
           component: () =>
-            import("@/components/MainContainer/Contents/MainHome.vue"),
+            import(
+              "@/components/MainContainer/Contents/MainContentViews/MainHome.vue"
+            ),
+        },
+        {
+          path: "/board",
+          component: () =>
+            import(
+              "@/components/MainContainer/Contents/MainContentViews/MainBoard.vue"
+            ),
+        },
+        {
+          path: "/info",
+          component: () =>
+            import(
+              "@/components/MainContainer/Contents/MainContentViews/MainInfo.vue"
+            ),
+        },
+        {
+          path: "/challenge",
+          component: () =>
+            import(
+              "@/components/MainContainer/Contents/MainContentViews/MainChallenge.vue"
+            ),
+        },
+        {
+          path: "/util",
+          component: () =>
+            import(
+              "@/components/MainContainer/Contents/MainContentViews/MainUtil.vue"
+            ),
         },
       ],
     },
