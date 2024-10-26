@@ -18,9 +18,50 @@ const router = createRouter({
     // }
     {
       path: "/",
-      name: "board",
-      component: () =>
-        import("@/components/MainContainer/Contents/Boards/TestBoard.vue"),
+      name: "Home",
+      component: () => import("@/views/MainView.vue"),
+      children: [
+        {
+          path: "/",
+          component: () =>
+            import(
+              "@/components/MainContainer/Contents/MainContentViews/MainHome.vue"
+            ),
+        },
+        {
+          path: "/board",
+          component: () =>
+            import(
+              "@/components/MainContainer/Contents/MainContentViews/MainBoard.vue"
+            ),
+        },
+        {
+          path: "/info",
+          component: () =>
+            import(
+              "@/components/MainContainer/Contents/MainContentViews/MainInfo.vue"
+            ),
+        },
+        {
+          path: "/challenge",
+          component: () =>
+            import(
+              "@/components/MainContainer/Contents/MainContentViews/MainChallenge.vue"
+            ),
+        },
+        {
+          path: "/util",
+          component: () =>
+            import(
+              "@/components/MainContainer/Contents/MainContentViews/MainUtil.vue"
+            ),
+        },
+      ],
+    },
+    {
+      path: "/signup",
+      name: "Signup",
+      component: () => import("@/views/SignupView.vue"),
     },
   ],
 });

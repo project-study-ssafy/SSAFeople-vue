@@ -1,39 +1,44 @@
 <template>
-  <button v-if="type === 'a'" class="btn-a">{{ text }}</button>
-  <button v-else-if="type === 'b'" class="btn-b">{{ text }}</button>
-  <button v-else class="btn-default">{{ text }}</button>
+  <button
+    v-if="buttonType === 'square-border'"
+    @click="handleClick"
+    class="bg-white font-semibold text-[#3396F4] border border-[#3396F4] px-4 py-2 hover:bg-[#3396F4] hover:text-white transition-colors duration-300"
+  >
+    {{ text }}
+  </button>
+  <button
+    v-else-if="buttonType === 'ellipse-border'"
+    @click="handleClick"
+    class="bg-white font-semibold text-[#3396F4] border border-[#3396F4] rounded-md px-4 py-2 hover:bg-[#3396F4] hover:text-white transition-colors duration-300"
+  >
+    {{ text }}
+  </button>
+  <button
+    v-else-if="buttonType === 'square-filled'"
+    @click="handleClick"
+    class="bg-[#3396F4] font-semibold text-white px-4 py-2 hover:bg-white hover:text-[#3396F4] border border-[#3396F4] transition-colors duration-300"
+  >
+    {{ text }}
+  </button>
+  <button
+    v-else-if="buttonType === 'ellipse-filled'"
+    @click="handleClick"
+    class="bg-[#3396F4] font-semibold text-white rounded-md px-4 py-2 hover:bg-white hover:text-[#3396F4] border border-[#3396F4] transition-colors duration-300"
+  >
+    {{ text }}
+  </button>
 </template>
 <script setup>
-defineProps({
-  type: String,
-  text: {
-    type: String,
-    required: true,
-  },
+const props = defineProps({
+  buttonType: String,
+  text: String,
+  onClick: Function,
 });
+
+const handleClick = () => {
+  if (props.onClick) {
+    props.onClick();
+  }
+};
 </script>
-<style scoped>
-.btn-a {
-  background-color: red;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 5px;
-}
-
-.btn-b {
-  background-color: blue;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 5px;
-}
-
-.btn-default {
-  background-color: grey;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 5px;
-}
-</style>
+<style scoped></style>

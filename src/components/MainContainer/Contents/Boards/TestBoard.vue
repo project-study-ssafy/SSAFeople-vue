@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Header :type="1" text="테스트 게시판" />
+    <AppHeader :type="1" text="테스트 게시판" />
     <table>
       <thead>
         <tr>
@@ -26,7 +26,7 @@
 
 <script setup>
 import { ref } from "vue";
-import { Header } from "../../..";
+import { AppHeader } from "../../..";
 const posts = ref([
   {
     id: 1,

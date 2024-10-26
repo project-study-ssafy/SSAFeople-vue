@@ -1,28 +1,33 @@
 <template>
-  <div
-    class="grid grid-cols-[minmax(200px,_1fr)_minmax(1148px,_1280px)_minmax(200px,_1fr)] bg-orange-300"
-  >
+  <div class="grid grid-cols-[1fr_minmax(1148px,_1280px)_1fr] boxShadow-3xl">
     <div class="col-span-1"></div>
-    <nav class="col-span-1 w-full h-20 bg-slate-700 text-white">
-      <div class="navbar-brand">
-        <router-link to="/" class="navbar-item">로고</router-link>
+    <nav
+      class="col-span-1 w-full h-20 text-black flex space-x-20 items-center px-10"
+    >
+      <div class="hamburger flex flex-col cursor-pointer">
+        <div class="bg-black mb-1 h-1 w-6"></div>
+        <div class="bg-black mb-1 h-1 w-8"></div>
+        <div class="bg-black h-1 w-4"></div>
       </div>
-      <div class="navbar-menu">
-        <div class="navbar-start">
-          <RouterLink to="/">Home</RouterLink>
-          <RouterLink to="/about">About</RouterLink>
-        </div>
+      <div class="flex space-x-10 text-base">
+        <RouterLink to="/info" class="navbar-item rounded font-bold"
+          >싸피 Info</RouterLink
+        >
+        <RouterLink to="/board" class="navbar-item rounded font-bold"
+          >싸뮤니티</RouterLink
+        >
+        <RouterLink to="/challenge" class="navbar-item rounded font-bold"
+          >코딩 Challenge</RouterLink
+        >
+        <RouterLink to="/util" class="navbar-item rounded font-bold"
+          >싸피 Util</RouterLink
+        >
       </div>
     </nav>
     <div class="col-span-1"></div>
   </div>
 </template>
 
-<script>
-import { RouterLink } from "vue-router";
-export default {
-  name: "MainNavigation",
-};
-</script>
+<script></script>
 
 <style scoped></style>

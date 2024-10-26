@@ -1,28 +1,13 @@
 <template>
-  <div id="main-content">
-    <RouterView id="main-view" />
-    <SideContents id="side-view" />
+  <div class="flex h-[700px]">
+    <RouterView
+      class="bg-[#f0f0f0] p-5 m-5 flex-none basis-4/5 border-[1px] rounded-3xl"
+    />
+    <SideContent class="basis-1/5 my-5" />
   </div>
 </template>
 <script setup>
 import { RouterView } from "vue-router";
-import { SideContents } from "..";
+import { SideContent } from "@/components";
 </script>
-<style scoped>
-#main-content {
-  display: flex; /* Flexbox로 배치 */
-  height: 2000px;
-}
-
-#main-view {
-  flex: 0 0 80%; /* 8:2 비율의 80% */
-  padding: 20px; /* 패딩 추가 */
-  background-color: #f0f0f0; /* 배경색으로 구분 */
-}
-
-#side-view {
-  flex: 0 0 20%; /* 8:2 비율의 20% */
-  padding: 20px; /* 패딩 추가 */
-  background-color: #d0d0d0; /* 배경색으로 구분 */
-}
-</style>
+<style scoped></style>
