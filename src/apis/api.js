@@ -2,31 +2,49 @@
 import axios from "axios";
 
 const apiClient = axios.create({
-  baseURL: "https://your-api-url.com/api", // API의 기본 URL을 설정하세요.
+  baseURL: process.env.VUE_APP_MAIN_API_SERVER_URL, // API의 기본 URL을 설정하세요.
   headers: {
     "Content-Type": "application/json",
   },
 });
 
-// API 요청을 위한 함수들을 정의합니다.
-export const getExampleData = async () => {
+// API 정의 부분
+
+// 회원가입
+export const postRegister = async (data) => {
   try {
-    const response = await apiClient.get("/example"); // 엔드포인트를 수정하세요.
+    const response = await apiClient.post(process.env.VUE_APP_REGISTER, data);
     return response.data;
   } catch (error) {
-    console.error("API 요청 에러:", error);
+    console.log("API 요청 에러:", error);
     throw error;
   }
 };
 
-export const postExampleData = async (data) => {
+// 이메일 검증 코드 요청
+export const postEmailVerificationCode = async (data) => {
   try {
-    const response = await apiClient.post("/example", data); // 엔드포인트를 수정하세요.
+    const response = await apiClient.post(
+      process.env.VUE_APP_SEND_EMAIL_VERIFICATION_CODE,
+      data,
+    );
     return response.data;
   } catch (error) {
-    console.error("API 요청 에러:", error);
+    console.log("API 요청 에러:", error);
     throw error;
   }
 };
 
-// 추가적인 API 요청 함수들을 여기에 작성하세요.
+// 이메일 검증
+export const postEmailVerification = async (data) => {
+  try {
+    const response = await apiClient.post(
+      process.env.VUE_APP_EMAIL_VERIFY,
+      data,
+    );
+    return response.data;
+  } catch (error) {
+    console.log("API 요청 에러:", error);
+    throw error;
+  }
+};
