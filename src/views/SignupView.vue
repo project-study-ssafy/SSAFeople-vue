@@ -2,7 +2,7 @@
   <div class="grid grid-cols-[1fr_minmax(1148px,_1280px)_1fr] bg-white">
     <div class="col-span-1"></div>
     <div
-      class="col-span-1 flex flex-col items-center justify-center min-h-[700px] bg-gray-400"
+      class="col-span-1 flex flex-col items-center justify-center min-h-[700px] p-5 m-5 rounded-3xl bg-gray-400"
     >
       <form
         @submit.prevent="register"

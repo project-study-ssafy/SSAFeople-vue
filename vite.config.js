@@ -22,4 +22,9 @@ export default defineConfig({
     "process.env.REGISTER": JSON.stringify(`${process.env.REGISTER}`),
     "process.env.SIGNIN": JSON.stringify(`${process.env.SIGNIN}`),
   },
+  // server: {
+  //     proxy: {
+  //         '/': 'http://localhost:8080'
+  //     }
+  // }
 });

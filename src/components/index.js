@@ -2,6 +2,7 @@
 export { default as MainHeader } from "./MainHeader.vue";
 export { default as MainNavigation } from "./MainNavigation.vue";
 export { default as MainFooter } from "./MainFooter.vue";
+export { default as MainTopbar } from "./MainTopbar.vue";
 
 // MainContainer component exports
 export { default as MainContent } from "./MainContainer/MainContent.vue";
