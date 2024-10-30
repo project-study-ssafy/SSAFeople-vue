@@ -15,6 +15,7 @@ const myContexts = [
   "안녕하세요. 인기글의 제목입니다.",
   "안녕하세요. 인기글의 제목입니다.",
   "안녕하세요. 인기글의 제목입니다.",
+  "hi",
 ];
 </script>
 <style scoped></style>
