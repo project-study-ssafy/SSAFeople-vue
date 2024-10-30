@@ -1,17 +1,20 @@
 <template>
-  <div>
-    <AppImageSlider />
+  <div class="grid grid-col-2 gap-5">
+    <AppImageSlider class="col-span-2" />
 
-    <AppHeader :type="1" text="홈 화면" />
-
-    <AppButton button-type="square-border" text="test" />
-    <AppButton button-type="ellipse-border" text="test" />
-    <AppButton button-type="square-filled" text="test" />
-    <AppButton button-type="ellipse-filled" text="test" />
+    <BoardCard title="🔥 인기글" :contexts="myContexts" class="col-span-1" />
+    <BoardCard title="🔥 인기글" :contexts="myContexts" class="col-span-1" />
   </div>
 </template>
 
 <script setup>
-import { AppHeader, AppButton, AppImageSlider } from "@/components";
+import { AppImageSlider, BoardCard } from "@/components";
+const myContexts = [
+  "안녕하세요. 인기글의 제목입니다.",
+  "안녕하세요. 인기글의 제목입니다.",
+  "안녕하세요. 인기글의 제목입니다.",
+  "안녕하세요. 인기글의 제목입니다.",
+  "안녕하세요. 인기글의 제목입니다.",
+];
 </script>
 <style scoped></style>

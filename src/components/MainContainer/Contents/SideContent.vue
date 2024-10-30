@@ -1,6 +1,6 @@
 <template>
   <div>
-    <UserProfile />
+    <UserProfile class="sticky top-28" />
   </div>
 </template>
 <script setup>

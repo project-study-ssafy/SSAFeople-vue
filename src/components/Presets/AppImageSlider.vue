@@ -4,14 +4,14 @@
     :slides-per-view="1"
     :space-between="50"
     :centeredSlides="true"
+    navigation
     :autoplay="{
       delay: 3500,
       disableOnInteraction: false,
     }"
-    navigation
     :pagination="{ clickable: true }"
     :scrollbar="{ draggable: true }"
-    class="rounded-xl w-[900px] h-[170px] m-4"
+    class="rounded-xl w-full h-[170px]"
   >
     <SwiperSlide v-for="(image, index) in images" :key="index">
       <img :src="image" alt="slider image" />
@@ -30,9 +30,9 @@ const modules = [Autoplay, Pagination, Navigation];
 
 // 이미지 배열을 작성하거나 props로 받아 사용할 수 있습니다.
 const images = [
-  "https://picsum.photos/900/170",
-  "https://picsum.photos/900/170?2",
-  "https://picsum.photos/900/170?3",
+  "https://picsum.photos/1100/200",
+  "https://picsum.photos/1100/200?2",
+  "https://picsum.photos/1100/200?3",
 ];
 </script>
 
