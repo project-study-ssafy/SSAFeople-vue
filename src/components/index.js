@@ -15,3 +15,5 @@ export { default as UserProfile } from "./MainContainer/Contents/SideContents/Us
 // Presets component exports
 export { default as AppHeader } from "./Presets/AppHeader.vue";
 export { default as AppButton } from "./Presets/AppButton.vue";
+export { default as AppImageSlider } from "./Presets/AppImageSlider.vue";
+export { default as BoardCard } from "./Presets/BoardCard.vue";

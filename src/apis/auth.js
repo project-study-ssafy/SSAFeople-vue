@@ -2,7 +2,7 @@
 import axios from "axios";
 
 const apiClient = axios.create({
-  baseURL: process.env.VUE_APP_MAIN_API_SERVER_URL, // API의 기본 URL을 설정하세요.
+  baseURL: import.meta.env.VITE_MAIN_API_SERVER_URL, // API의 기본 URL을 설정하세요.
   headers: {
     "Content-Type": "application/json",
   },
@@ -13,7 +13,7 @@ const apiClient = axios.create({
 // 회원가입
 export const postRegister = async (data) => {
   try {
-    const response = await apiClient.post(process.env.VUE_APP_REGISTER, data);
+    const response = await apiClient.post(import.meta.env.VITE_REGISTER, data);
     return response.data;
   } catch (error) {
     console.log("API 요청 에러:", error);
@@ -24,10 +24,16 @@ export const postRegister = async (data) => {
 // 이메일 검증 코드 요청
 export const postEmailVerificationCode = async (data) => {
   try {
+    console.log(
+      import.meta.env.VITE_MAIN_API_SERVER_URL +
+        import.meta.env.VITE_SEND_EMAIL_VERIFICATION_CODE,
+    );
+    // console.log(data)
     const response = await apiClient.post(
-      process.env.VUE_APP_SEND_EMAIL_VERIFICATION_CODE,
+      import.meta.env.VITE_SEND_EMAIL_VERIFICATION_CODE,
       data,
     );
+    console.log(response.data);
     return response.data;
   } catch (error) {
     console.log("API 요청 에러:", error);
@@ -39,7 +45,7 @@ export const postEmailVerificationCode = async (data) => {
 export const postEmailVerification = async (data) => {
   try {
     const response = await apiClient.post(
-      process.env.VUE_APP_EMAIL_VERIFY,
+      import.meta.env.VITE_EMAIL_VERIFY,
       data,
     );
     return response.data;

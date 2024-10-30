@@ -1,12 +1,17 @@
 <template>
   <div
-    class="grid grid-cols-[1fr_minmax(1148px,_1280px)_1fr] border-[#EEEEEE] border-b-2"
+    class="grid grid-cols-[1fr_minmax(1148px,_1280px)_1fr] border-[#EEEEEE] border-b-2 top-0 sticky z-20 bg-white"
   >
     <div class="col-span-1"></div>
     <nav class="col-span-1 w-full text-black flex flex-col relative">
+      <!-- 이부분에 v-show로 로고 : 스크롤이 특정 길이 이상 내려갔을 때 -->
       <div class="flex items-center h-20 relative">
+        <RouterLink v-show="showLogo" to="/" class="mx-10">
+          <img :src="LogoImage" alt="로고" />
+        </RouterLink>
         <div
           class="hamburger flex flex-col cursor-pointer px-10 py-10 absolute"
+          :class="showLogo ? 'hidden' : 'block'"
           @click="toggleMenu"
         >
           <div
@@ -44,7 +49,7 @@
           'opacity-0 translate-y-[-20px] invisible': !isMenuOpen,
           'opacity-100 translate-y-0 visible': isMenuOpen,
         }"
-        class="absolute left-0 right-0 bg-white m-0.5 top-full transition-all duration-[500ms] ease-in-out"
+        class="absolute left-0 right-0 bg-white top-full transition-all duration-[500ms] ease-in-out z-20"
       >
         <div
           class="ml-28 grid grid-cols-4 text-center w-[600px] justify-between my-2"
@@ -124,23 +129,27 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import { ref } from "vue";
+import LogoImage from "@/assets/logo.svg";
 
-export default {
-  setup() {
-    const isMenuOpen = ref(false); // 메뉴 상태를 관리
+const isMenuOpen = ref(false); // 메뉴 상태를 관리
+const showLogo = ref(false);
 
-    const toggleMenu = () => {
-      isMenuOpen.value = !isMenuOpen.value; // 메뉴 상태 토글
-    };
-
-    return {
-      isMenuOpen,
-      toggleMenu,
-    };
-  },
+const toggleMenu = () => {
+  isMenuOpen.value = !isMenuOpen.value; // 메뉴 상태 토글
 };
+
+const handleScroll = () => {
+  if (window.scrollY > 130) {
+    showLogo.value = true;
+    isMenuOpen.value = false;
+  } else {
+    showLogo.value = false;
+  }
+};
+
+window.addEventListener("scroll", handleScroll);
 </script>
 
 <style scoped></style>
