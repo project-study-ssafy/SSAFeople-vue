@@ -1,5 +1,7 @@
 <template>
   <div>
+    <AppImageSlider />
+
     <AppHeader :type="1" text="홈 화면" />
 
     <AppButton button-type="square-border" text="test" />
@@ -10,6 +12,6 @@
 </template>
 
 <script setup>
-import { AppHeader, AppButton } from "@/components";
+import { AppHeader, AppButton, AppImageSlider } from "@/components";
 </script>
 <style scoped></style>
