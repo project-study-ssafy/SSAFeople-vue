@@ -2,11 +2,16 @@
   <div class="grid grid-cols-[1fr_minmax(1148px,_1280px)_1fr] bg-white">
     <div class="col-span-1"></div>
     <div
-      class="col-span-1 flex flex-col items-center justify-center min-h-[700px] p-5 m-5 rounded-3xl bg-gray-400"
+      class="col-span-1 flex flex-row items-center justify-center min-h-[700px] p-5 m-5 rounded-3xl bg-[#e1e1e1] space-x-8"
     >
+      <img
+        :src="communication"
+        alt="커뮤니케이션이미지"
+        class="max-w-2xl basis-1/2"
+      />
       <form
         @submit.prevent="register"
-        class="w-full max-w-md p-8 rounded-lg shadow-md bg-white my-10"
+        class="w-full max-w-md p-8 rounded-lg shadow-md bg-white my-10 basis-1/2"
         novalidate
       >
         <AppHeader :type="1" text="회원가입" class="mx-auto w-fit mb-4" />
@@ -48,26 +53,6 @@
           />
           <span v-if="errors.nickname" class="text-red-500 text-sm">{{
             errors.nickname
-          }}</span>
-        </div>
-
-        <div class="mb-4">
-          <label
-            for="classnumber"
-            class="block text-sm font-extrabold text-gray-700"
-            >반 번호</label
-          >
-          <input
-            type="text"
-            id="classnumber"
-            v-model="userData.classnumber"
-            autocomplete="off"
-            required
-            :class="{ 'border-red-500': errors.classnumber }"
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-black outline-none focus:bg-transparent h-10"
-          />
-          <span v-if="errors.classnumber" class="text-red-500 text-sm">{{
-            errors.classnumber
           }}</span>
         </div>
 
@@ -155,8 +140,13 @@
 <script setup>
 import { ref } from "vue";
 import { AppHeader, AppButton } from "@/components";
+import communication from "@/assets/communication.svg";
 import Swal from "sweetalert2";
-import { postRegister, postEmailVerification } from "@/apis/api";
+import {
+  postRegister,
+  postEmailVerificationCode,
+  postEmailVerification,
+} from "@/apis";
 
 const status = ref({
   emailVerify: false,
@@ -166,7 +156,6 @@ const status = ref({
 const userData = ref({
   username: "",
   nickname: "",
-  classnumber: "",
   email: "",
   password: "",
   passwordconfirm: "",
@@ -175,7 +164,6 @@ const userData = ref({
 const errors = ref({
   username: "",
   nickname: "",
-  classnumber: "",
   email: "",
   password: "",
   passwordconfirm: "",
@@ -186,7 +174,6 @@ const validateUserData = () => {
   errors.value = {
     username: "",
     nickname: "",
-    classnumber: "",
     email: "",
     password: "",
     passwordconfirm: "",
@@ -199,16 +186,6 @@ const validateUserData = () => {
 
   if (!userData.value.nickname) {
     errors.value.nickname = "닉네임이 필요합니다.";
-  }
-
-  if (!userData.value.classnumber) {
-    errors.value.classnumber = "반 번호가 필요합니다.";
-  }
-
-  // 반 번호: 2자리 이하의 숫자
-  const classnumberPattern = /^[0-9]{1,2}$/;
-  if (!classnumberPattern.test(userData.value.classnumber)) {
-    errors.value.classnumber = "반 번호는 2자리 이하의 숫자여야 합니다.";
   }
 
   if (!userData.value.email) {
@@ -290,6 +267,17 @@ const emailValidation = () => {
   }
 
   // 이메일 검증코드 받는 요청 들어가야 함
+  try {
+    const response = postEmailVerificationCode(
+      JSON.stringify({
+        email: userData.value.email,
+      }),
+    );
+    console.log(response);
+  } catch (error) {
+    console.log(error);
+    return false;
+  }
 
   // CSS 스타일 추가
   const style = document.createElement("style");
