@@ -2,82 +2,106 @@
   <div class="flex flex-col items-center bg-[#ffffff]">
     <!-- v-if 토큰 정보로 조건부 렌더링 -->
     <form
-      v-if="true"
+      v-if="!isAuthenticated"
       @submit.prevent="signin"
       class="w-full max-w-md bg-white p-4 flex flex-col items-center border border-gray-300 rounded-xl"
     >
-      <div class="mb-2 w-full">
-        <label for="email" class="block text-sm font-medium text-gray-700"
-          >이메일</label
-        >
-        <input
-          type="email"
-          id="email"
-          v-model="userData.email"
-          required
-          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-black outline-none focus:bg-transparent"
-        />
+      <img :src="logoImage" alt="logo" />
+      <div class="mb-2 font-medium">
+        로그인하고 함께 <span class="font-bold">싸피 Play!</span>
       </div>
-      <div class="mb-2 w-full">
-        <label for="password" class="block text-sm font-medium text-gray-700"
-          >비밀번호</label
-        >
-        <input
-          type="password"
-          id="password"
-          v-model="userData.password"
-          required
-          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-black outline-none focus:bg-transparent"
+      <RouterLink to="/signin" class="w-full">
+        <AppButton
+          button-type="ellipse-filled"
+          text="로그인하기"
+          class="w-full mb-2"
         />
-      </div>
-      <AppButton
-        button-type="ellipse-filled"
-        text="로그인"
-        class="w-full mb-2"
-      />
+      </RouterLink>
       <RouterLink to="/signup" class="font-semibold text-xs"
-        >회원가입</RouterLink
+        >계정이 없으신가요?
+        <span class="font-semibold">회원가입</span></RouterLink
       >
     </form>
     <div
       v-else
       class="w-full max-w-md bg-white p-4 flex flex-col items-center border-[1px] rounded-xl"
     >
-      <div class="flex flex-row w-full space-x-2 mb-1">
+      <div
+        class="flex flex-row w-full justify-center items-center space-x-6 mb-4"
+      >
         <img
           src="https://picsum.photos/100"
           alt="프로필"
-          class="w-14 h-14 rounded-full"
+          class="w-12 h-12 rounded-full"
         />
-        <div>
-          <div class="font-bold text-sm">risingGyu</div>
-          <div class="font-medium text-sm">test@test.com</div>
-          <div class="w-full flex flex-row justify-between">
-            <RouterLink to="/mypage" class="text-xs">게시글</RouterLink>
-            <span class="border-r h-6 border-gray-300"></span>
-            <RouterLink to="/mypage" class="text-xs">댓글</RouterLink>
+        <div class="space-y-2">
+          <div class="flex justify-between items-center">
+            <span class="font-bold text-sm">{{ userData.username }}</span>
+            <RouterLink :to="`/user/${userData.id}`" class="text-xs h-fit"
+              >마이페이지</RouterLink
+            >
           </div>
+          <div class="font-medium text-xs mb-2">{{ userData.email }}</div>
         </div>
       </div>
       <AppButton
         button-type="ellipse-filled"
         text="게시글 작성"
-        class="w-full"
+        class="w-full mb-2"
       />
+      <button @click="logout" class="font-semibold text-xs">로그아웃</button>
     </div>
   </div>
 </template>
 <script setup>
+import { onMounted, ref, computed } from "vue";
 import { AppButton } from "@/components";
-import { ref } from "vue";
+import { getUserData } from "@/apis";
+import { useAuthStore } from "@/stores/auth"; // Pinia 스토어 임포트
+import router from "@/router";
+import logoImage from "@/assets/logo.svg";
+
 const userData = ref({
-  email: "",
-  password: "",
+  id: sessionStorage.getItem("userData")
+    ? JSON.parse(sessionStorage.getItem("userData")).id
+    : null,
+  username: sessionStorage.getItem("userData")
+    ? JSON.parse(sessionStorage.getItem("userData")).username
+    : "",
+  email: sessionStorage.getItem("userData")
+    ? JSON.parse(sessionStorage.getItem("userData")).email
+    : "",
 });
 
-const signin = () => {
-  console.log(userData.value.email);
-  console.log(userData.value.password);
+const authStore = useAuthStore(); // 스토어 인스턴스 생성
+const isAuthenticated = computed(() => !!authStore.token); // token이 존재하면 true
+
+const logout = () => {
+  authStore.clearToken();
+  removeUserDataFromSession();
+  router.push("/");
 };
+
+const setUserDataToSession = (userData) => {
+  sessionStorage.setItem("userData", JSON.stringify(userData));
+};
+
+const removeUserDataFromSession = () => {
+  sessionStorage.removeItem("userData");
+};
+
+// 컴포넌트가 마운트될 때 토큰이 있으면 유저 정보를 세션 스토리지에 저장
+onMounted(async () => {
+  if (authStore.token && !sessionStorage.getItem("userData")) {
+    try {
+      const userDataResponse = await getUserData();
+      setUserDataToSession(userDataResponse.data);
+      userData.value = userDataResponse.data;
+    } catch (error) {
+      console.log("유저 데이터를 불러오지 못했습니다.", error);
+    }
+  }
+});
 </script>
+
 <style scoped></style>
