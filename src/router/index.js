@@ -88,7 +88,7 @@ const router = createRouter({
     },
     {
       path: "/user/:id",
-      component: () => import("@/views/MainMypage.vue"),
+      component: () => import("@/views/MainUser.vue"),
       beforeEnter: (to, from, next) => {
         const authStore = useAuthStore();
         if (!authStore.token) {
