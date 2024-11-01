@@ -1,8 +1,10 @@
 <template>
-  <div class="grid grid-cols-[1fr_minmax(1148px,_1280px)_1fr] bg-white">
+  <div
+    class="col-span-3 grid grid-cols-[1fr_minmax(1148px,_1280px)_1fr] bg-white"
+  >
     <div class="col-span-1"></div>
     <div
-      class="col-span-1 flex flex-row items-center justify-center min-h-[700px] p-5 m-5 rounded-3xl bg-[#e1e1e1] space-x-8"
+      class="col-span-1 flex flex-row items-center justify-center min-h-[700px] p-5 m-5 space-x-8"
     >
       <img
         :src="communication"
@@ -11,10 +13,16 @@
       />
       <form
         @submit.prevent="register"
-        class="w-full max-w-md p-8 rounded-lg shadow-md bg-white my-10 basis-1/2"
+        class="w-full max-w-md p-8 rounded-lg shadow-4way bg-white my-10 basis-1/2"
         novalidate
       >
-        <AppHeader :type="1" text="회원가입" class="mx-auto w-fit mb-4" />
+        <RouterLink
+          to="/"
+          class="mx-auto flex mb-4 justify-center items-center space-x-2"
+        >
+          <img :src="LogoImage" alt="로고" />
+          <AppHeader :type="1" text="회원가입" class="h-fit" />
+        </RouterLink>
 
         <div class="mb-4">
           <label
@@ -147,6 +155,8 @@ import {
   postEmailVerificationCode,
   postEmailVerification,
 } from "@/apis";
+import router from "@/router";
+import LogoImage from "@/assets/logo.svg";
 
 const status = ref({
   emailVerify: false,
@@ -227,7 +237,12 @@ const register = async () => {
   // 이메일 인증 확인 후 회원가입 진행
   if (status.value.emailVerify) {
     try {
-      const response = await postRegister(userData.value);
+      const response = await postRegister({
+        username: userData.value.username,
+        nickname: userData.value.nickname,
+        email: userData.value.email,
+        password: userData.value.password,
+      });
 
       Swal.fire({
         icon: "success",
@@ -235,9 +250,10 @@ const register = async () => {
         text: "회원가입이 완료되었습니다!",
         showConfirmButton: false,
         timer: 1500,
+      }).then(() => {
+        console.log("회원가입 성공", response.data);
+        router.push("/");
       });
-
-      console.log("회원가입 성공", response.data);
     } catch (error) {
       Swal.fire({
         icon: "error",
