@@ -17,3 +17,5 @@ export { default as AppHeader } from "./Presets/AppHeader.vue";
 export { default as AppButton } from "./Presets/AppButton.vue";
 export { default as AppImageSlider } from "./Presets/AppImageSlider.vue";
 export { default as BoardCard } from "./Presets/BoardCard.vue";
+export { default as MessageAlert } from "./Presets/MessageAlert.vue";
+export { default as MessageModal } from "./Presets/MessageModal.vue";
