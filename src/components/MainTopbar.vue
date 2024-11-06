@@ -1,6 +1,6 @@
 <template>
   <div
-    class="grid grid-cols-[1fr_minmax(1148px,_1280px)_1fr] bg-white h-10 border-[#EEEEEE] border-b-2"
+    class="grid grid-cols-[1fr_minmax(1148px,_1280px)_1fr] bg-white h-10 border-b border-gray-300"
   >
     <div class="col-span-1"></div>
     <div
