@@ -1,5 +1,5 @@
 <script setup>
-import { MainFooter, MainTopbar } from "./components";
+import { MainFooter, MainTopbar } from "@/components";
 </script>
 
 <template>
