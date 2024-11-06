@@ -71,9 +71,10 @@ import { ref } from "vue";
 import { AppHeader, AppButton } from "@/components";
 import communication from "@/assets/communication.svg";
 import { postSignIn, getUserData } from "@/apis";
-import { useAuthStore } from "@/stores/auth";
+import { useAuthStore, useUserStore } from "@/stores/auth";
 import LogoImage from "@/assets/logo.svg";
 import router from "@/router";
+import Swal from "sweetalert2";
 
 const error = ref({
   message: "",
@@ -105,12 +106,23 @@ const signinData = ref({
 });
 
 const authStore = useAuthStore();
+const userStore = useUserStore();
 
 const signin = async () => {
   // 유효성 검사
   if (validation()) {
     return;
   }
+
+  const style = document.createElement("style");
+  style.innerHTML = `
+    .swal2-title {
+      font-size: 24px; /* 원하는 크기로 설정 */
+    }
+    .swal2-confirm {
+      background-color: #3396F4;
+    }
+  `;
 
   try {
     const response = await postSignIn(signinData.value);
@@ -123,20 +135,42 @@ const signin = async () => {
           email: "",
           password: "",
         };
-        console.log("로그인 성공. 토큰이 쿠키에 저장되었습니다.");
+        console.log("토큰이 쿠키에 저장되었습니다.");
 
         try {
           const userDataResponse = await getUserData();
+          userStore.setUserData(userDataResponse.data);
           setUserDataToSession(userDataResponse.data);
           router.push("/");
         } catch (error) {
+          Swal.fire({
+            icon: "error",
+            title: "로그인 실패",
+            text:
+              error.response?.data?.message ||
+              "문제가 발생했습니다. 다시 시도해주세요.",
+          });
           console.log(error);
         }
       } else {
+        Swal.fire({
+          icon: "error",
+          title: "로그인 실패",
+          text:
+            error.value.response?.data?.message ||
+            "문제가 발생했습니다. 다시 시도해주세요.",
+        });
         console.warn("로그인 성공하였으나 토큰이 없습니다.");
       }
     }
   } catch (error) {
+    Swal.fire({
+      icon: "error",
+      title: "로그인 실패",
+      text:
+        error.response?.data?.message ||
+        "문제가 발생했습니다. 다시 시도해주세요.",
+    });
     console.log(error);
   }
 };
