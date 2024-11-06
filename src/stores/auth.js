@@ -10,7 +10,7 @@ export const useAuthStore = defineStore("auth", {
   actions: {
     setToken(token) {
       this.token = token; // 상태 업데이트
-      cookies.set("access-token", token, { expires: "1d" }); // 쿠키에 저장
+      cookies.set("access-token", token, { expires: "10h" }); // 쿠키에 저장
     },
     clearToken() {
       this.token = null; // 상태 초기화
@@ -22,6 +22,32 @@ export const useAuthStore = defineStore("auth", {
         this.clearToken();
       }
       return !!cookieToken && !!this.token;
+    },
+  },
+});
+
+export const useUserStore = defineStore("userData", {
+  state: () => ({
+    userData: JSON.parse(sessionStorage.getItem("userData")) || {
+      id: null,
+      username: "",
+      email: "",
+      nickname: "",
+      role: "",
+    },
+  }),
+  actions: {
+    setUserData(data) {
+      this.userData = data;
+    },
+    clearUserData() {
+      this.userData = {
+        id: null,
+        username: "",
+        email: "",
+        nickname: "",
+        role: "",
+      };
     },
   },
 });
