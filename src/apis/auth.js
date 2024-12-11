@@ -23,16 +23,56 @@ export const postRegister = async (data) => {
   }
 };
 
+// 로그인
+export const postSignIn = async (data) => {
+  try {
+    const response = await apiClient.post(
+      import.meta.env.VITE_USERS + import.meta.env.VITE_SIGNIN,
+      data,
+    );
+    return response;
+  } catch (error) {
+    console.log("API 요청 에러:", error);
+    throw error;
+  }
+};
+
+// 회원 정보 조회
+export const getUserData = async (id) => {
+  try {
+    const authStore = useAuthStore();
+    const token = authStore.token;
+    if (!id) {
+      const response = await apiClient.get(import.meta.env.VITE_USERS, {
+        headers: {
+          "access-token": token, // 헤더에 토큰 추가
+        },
+      });
+
+      return response.data;
+    } else {
+      const response = await apiClient.get(
+        import.meta.env.VITE_USERS + `/${id}`,
+        {
+          headers: {
+            "access-token": token, // 헤더에 토큰 추가
+          },
+        },
+      );
+      return response.data;
+    }
+  } catch (error) {
+    console.log("API 요청 에러:", error);
+    throw error;
+  }
+};
+
 // 이메일 검증 코드 요청
 export const postEmailVerificationCode = async (data) => {
   try {
-    console.log(
-      import.meta.env.VITE_MAIN_API_SERVER_URL +
-        import.meta.env.VITE_SEND_EMAIL_VERIFICATION_CODE,
-    );
-    // console.log(data)
     const response = await apiClient.post(
-      import.meta.env.VITE_SEND_EMAIL_VERIFICATION_CODE,
+      import.meta.env.VITE_USERS +
+        import.meta.env.VITE_SEND_EMAIL_VERIFICATION_CODE,
       data,
     );
     return response.data;
@@ -46,40 +86,9 @@ export const postEmailVerificationCode = async (data) => {
 export const postEmailVerification = async (data) => {
   try {
     const response = await apiClient.post(
-      import.meta.env.VITE_EMAIL_VERIFY,
+      import.meta.env.VITE_USERS + import.meta.env.VITE_EMAIL_VERIFY,
       data,
     );
-    return response.data;
-  } catch (error) {
-    console.log("API 요청 에러:", error);
-    throw error;
-  }
-};
-
-// 로그인
-export const postSignIn = async (data) => {
-  try {
-    const response = await apiClient.post(import.meta.env.VITE_SIGNIN, data);
-
-    return response;
-  } catch (error) {
-    console.log("API 요청 에러:", error);
-    throw error;
-  }
-};
-
-// 회원 정보 조회
-export const getUserData = async () => {
-  try {
-    const authStore = useAuthStore();
-    const token = authStore.token;
-
-    const response = await apiClient.get(import.meta.env.VITE_USERS, {
-      headers: {
-        "access-token": token, // 헤더에 토큰 추가
-      },
-    });
-
     return response.data;
   } catch (error) {
     console.log("API 요청 에러:", error);
