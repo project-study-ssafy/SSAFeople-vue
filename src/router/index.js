@@ -80,11 +80,31 @@ const router = createRouter({
       path: "/signup",
       name: "Signup",
       component: () => import("@/views/SignupView.vue"),
+      beforeEnter: (to, from, next) => {
+        const authStore = useAuthStore();
+        if (!authStore.token) {
+          // 토큰이 없으면 로그인 페이지로 리다이렉트
+          next();
+        } else {
+          // 토큰이 있으면 다음 페이지로 이동
+          next({ name: "Home" });
+        }
+      },
     },
     {
       path: "/signin",
       name: "Signin",
       component: () => import("@/views/SigninView.vue"),
+      beforeEnter: (to, from, next) => {
+        const authStore = useAuthStore();
+        if (!authStore.token) {
+          // 토큰이 없으면 로그인 페이지로 리다이렉트
+          next();
+        } else {
+          // 토큰이 있으면 다음 페이지로 이동
+          next({ name: "Home" });
+        }
+      },
     },
     {
       path: "/user/:id",
