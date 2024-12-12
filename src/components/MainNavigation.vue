@@ -1,6 +1,6 @@
 <template>
   <div
-    class="grid grid-cols-[1fr_minmax(1148px,_1280px)_1fr] border-[#EEEEEE] border-b-2 top-0 sticky z-20 bg-white"
+    class="grid grid-cols-[1fr_minmax(1148px,_1280px)_1fr] border-b border-gray-300 top-0 sticky z-20 bg-white"
   >
     <div class="col-span-1"></div>
     <nav class="col-span-1 w-full text-black flex flex-col">
@@ -163,7 +163,7 @@ const toggleMenu = () => {
 };
 
 const handleScroll = () => {
-  if (window.scrollY > 130) {
+  if (window.scrollY > 167) {
     showLogo.value = true;
     isMenuOpen.value = false;
   } else {

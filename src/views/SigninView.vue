@@ -71,9 +71,10 @@ import { ref } from "vue";
 import { AppHeader, AppButton } from "@/components";
 import communication from "@/assets/communication.svg";
 import { postSignIn, getUserData } from "@/apis";
-import { useAuthStore } from "@/stores/auth";
+import { useAuthStore, useUserStore } from "@/stores/auth";
 import LogoImage from "@/assets/logo.svg";
 import router from "@/router";
+import Swal from "sweetalert2";
 
 const error = ref({
   message: "",
@@ -105,28 +106,72 @@ const signinData = ref({
 });
 
 const authStore = useAuthStore();
+const userStore = useUserStore();
 
 const signin = async () => {
   if (validation()) {
     return;
   }
 
+  const style = document.createElement("style");
+  style.innerHTML = `
+    .swal2-title {
+      font-size: 24px; /* 원하는 크기로 설정 */
+    }
+    .swal2-confirm {
+      background-color: #3396F4;
+    }
+  `;
+
   try {
     const response = await postSignIn(signinData.value);
     const token = response.headers["access-token"];
 
-    if (token) {
-      authStore.setToken(token);
-      const userData = await getUserData();
-      sessionStorage.setItem("userData", JSON.stringify(userData.data));
-      router.push("/");
-    } else {
-      error.value.message = "인증 토큰을 받지 못했습니다.";
+    if (response.data.success) {
+      const token = response.headers["access-token"];
+      if (token) {
+        authStore.setToken(token);
+        signinData.value = {
+          email: "",
+          password: "",
+        };
+        console.log("토큰이 쿠키에 저장되었습니다.");
+
+        try {
+          const userDataResponse = await getUserData();
+          userStore.setUserData(userDataResponse.data);
+          setUserDataToSession(userDataResponse.data);
+          router.push("/");
+        } catch (error) {
+          Swal.fire({
+            icon: "error",
+            title: "로그인 실패",
+            text:
+              error.response?.data?.message ||
+              "문제가 발생했습니다. 다시 시도해주세요.",
+          });
+          console.log(error);
+        }
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "로그인 실패",
+          text:
+            error.value.response?.data?.message ||
+            "문제가 발생했습니다. 다시 시도해주세요.",
+        });
+        console.warn("로그인 성공하였으나 토큰이 없습니다.");
+      }
     }
-  } catch (err) {
-    error.value.message =
-      err.response?.data?.message || "로그인에 실패했습니다.";
-    console.error("로그인 실패:", err);
+  } catch (error) {
+    Swal.fire({
+      icon: "error",
+      title: "로그인 실패",
+      text:
+        error.response?.data?.message ||
+        "문제가 발생했습니다. 다시 시도해주세요.",
+    });
+    console.log(error);
   }
 };
 
