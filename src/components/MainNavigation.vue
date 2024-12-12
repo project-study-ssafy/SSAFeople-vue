@@ -3,44 +3,56 @@
     class="grid grid-cols-[1fr_minmax(1148px,_1280px)_1fr] border-[#EEEEEE] border-b-2 top-0 sticky z-20 bg-white"
   >
     <div class="col-span-1"></div>
-    <nav class="col-span-1 w-full text-black flex flex-col relative">
+    <nav class="col-span-1 w-full text-black flex flex-col">
       <!-- 이부분에 v-show로 로고 : 스크롤이 특정 길이 이상 내려갔을 때 -->
-      <div class="flex items-center h-20 relative">
+      <div class="flex items-center h-16 relative">
         <RouterLink v-show="showLogo" to="/" class="mx-10">
           <img :src="LogoImage" alt="로고" />
         </RouterLink>
         <div
-          class="hamburger flex flex-col cursor-pointer px-10 py-10 absolute"
+          class="hamburger flex flex-col cursor-pointer mr-12"
           :class="showLogo ? 'hidden' : 'block'"
           @click="toggleMenu"
         >
           <div
-            class="bg-black mb-1 h-1 w-8 transition-all duration-300 ease-in-out"
+            class="bg-[#454545] mb-1.5 h-0.5 w-6 transition-all duration-300 ease-in-out"
             :class="{ 'transform rotate-45 translate-y-2': isMenuOpen }"
           ></div>
           <div
-            class="bg-black mb-1 h-1 w-8 transition-all duration-300 ease-in-out"
+            class="bg-[#454545] mb-1.5 h-0.5 w-4 transition-all duration-300 ease-in-out"
             :class="{ 'opacity-0': isMenuOpen }"
           ></div>
           <div
-            class="bg-black h-1 w-8 transition-all duration-300 ease-in-out"
+            class="bg-[#454545] h-0.5 w-6 transition-all duration-300 ease-in-out"
             :class="{ 'transform -rotate-45 -translate-y-2': isMenuOpen }"
           ></div>
         </div>
-        <div class="w-[600px] grid grid-cols-4 text-center text-base ml-28">
-          <RouterLink to="/info" class="navbar-item rounded font-bold px-2"
+        <nav class="flex gap-10 text-center text-lg text-[#333]">
+          <RouterLink
+            active-class="router-active"
+            to="/info"
+            class="navbar-item hover:text-[var(--ssafy-blue)] transition rounded font-[600] px-2 text-start"
             >싸피 Info</RouterLink
           >
-          <RouterLink to="/board" class="navbar-item rounded font-bold px-2"
+          <RouterLink
+            active-class="router-active"
+            to="/ssammunity"
+            class="navbar-item hover:text-[var(--ssafy-blue)] transition rounded font-[600] px-2 text-start"
             >싸뮤니티</RouterLink
           >
-          <RouterLink to="/challenge" class="navbar-item rounded font-bold px-2"
+          <RouterLink
+            active-class="router-active"
+            to="/challenge"
+            class="navbar-item hover:text-[var(--ssafy-blue)] transition rounded font-[600] px-2 text-start"
             >코딩 Challenge</RouterLink
           >
-          <RouterLink to="/util" class="navbar-item rounded font-bold px-2"
+          <RouterLink
+            active-class="router-active"
+            to="/util"
+            class="navbar-item hover:text-[var(--ssafy-blue)] transition rounded font-[600] px-2 text-start"
             >싸피 Util</RouterLink
           >
-        </div>
+        </nav>
       </div>
 
       <!-- 햄버거 메뉴가 열렸을 때 세부 항목 -->
@@ -49,78 +61,88 @@
           'opacity-0 translate-y-[-20px] invisible': !isMenuOpen,
           'opacity-100 translate-y-0 visible': isMenuOpen,
         }"
-        class="absolute left-0 right-0 bg-white top-full transition-all duration-[500ms] ease-in-out z-20"
+        class="flex justify-center w-full absolute left-0 right-0 bg-white top-full transition-all duration-[500ms] ease-in-out z-20 border-solid border-b-2 border-gray-200"
       >
-        <div
-          class="ml-28 grid grid-cols-4 text-center w-[600px] justify-between my-2"
-        >
-          <div class="flex flex-col space-y-2 justify-center items-center">
+        <div class="min-w-[1280px] flex justify-start gap-4 mt-6 mb-8">
+          <div
+            class="navbar-item-box flex flex-col space-y-2 justify-start items-center border-solid border-r-2 border-gray-300"
+          >
             <RouterLink
-              to="/info/detail1"
-              class="navbar-item rounded hover:bg-gray-200"
-              >세부 Info 1</RouterLink
+              to="/info"
+              class="inline-block navbar-item rounded text-[#222] font-[600] text-base w-full pr-10"
+              >싸피 Info</RouterLink
             >
-            <RouterLink
-              to="/info/detail2"
-              class="navbar-item rounded hover:bg-gray-200"
-              >세부 Info 2</RouterLink
-            >
-            <RouterLink
-              to="/info/detail3"
-              class="navbar-item rounded hover:bg-gray-200"
-              >세부 Info 3</RouterLink
-            >
+            <div class="pl-1 flex flex-col gap-1">
+              <RouterLink to="/info/detail1" class="rounded pr-10"
+                >세부 Info 1</RouterLink
+              >
+              <RouterLink to="/info/detail2" class="rounded pr-10"
+                >세부 Info 2</RouterLink
+              >
+              <RouterLink to="/info/detail3" class="rounded pr-10"
+                >세부 Info 3</RouterLink
+              >
+            </div>
           </div>
-          <div class="flex flex-col space-y-2 justify-center items-center">
+          <div
+            class="navbar-item-box flex flex-col space-y-2 justify-start items-center border-solid border-r-2 border-gray-300"
+          >
             <RouterLink
-              to="/board/detail1"
-              class="navbar-item rounded hover:bg-gray-200"
-              >세부 커뮤니티 1</RouterLink
+              to="/ssammunity"
+              class="navbar-item rounded text-[#222] font-[600] text-base w-full pr-10"
+              >싸뮤니티</RouterLink
             >
-            <RouterLink
-              to="/board/detail2"
-              class="navbar-item rounded hover:bg-gray-200"
-              >세부 커뮤니티 2</RouterLink
-            >
-            <RouterLink
-              to="/board/detail3"
-              class="navbar-item rounded hover:bg-gray-200"
-              >세부 커뮤니티 3</RouterLink
-            >
+            <div class="pl-1 flex flex-col gap-1">
+              <RouterLink to="/board/detail1" class="rounded pr-10"
+                >세부 커뮤니티 1</RouterLink
+              >
+              <RouterLink to="/board/detail2" class="rounded pr-10"
+                >세부 커뮤니티 2</RouterLink
+              >
+              <RouterLink to="/board/detail3" class="rounded pr-10"
+                >세부 커뮤니티 3</RouterLink
+              >
+            </div>
           </div>
-          <div class="flex flex-col space-y-2 justify-center items-center">
+          <div
+            class="navbar-item-box flex flex-col space-y-2 justify-center items-center border-solid border-r-2 border-gray-300"
+          >
             <RouterLink
-              to="/challenge/detail1"
-              class="navbar-item rounded hover:bg-gray-200"
-              >세부 Challenge 1</RouterLink
+              to="/challenge"
+              class="navbar-item rounded text-[#222] font-[600] text-base w-full pr-10"
+              >코딩 Challenge</RouterLink
             >
-            <RouterLink
-              to="/challenge/detail2"
-              class="navbar-item rounded hover:bg-gray-200"
-              >세부 Challenge 2</RouterLink
-            >
-            <RouterLink
-              to="/challenge/detail3"
-              class="navbar-item rounded hover:bg-gray-200"
-              >세부 Challenge 3</RouterLink
-            >
+            <div class="pl-1 flex flex-col gap-1">
+              <RouterLink to="/challenge/detail1" class="rounded pr-10"
+                >세부 Challenge 1</RouterLink
+              >
+              <RouterLink to="/challenge/detail2" class="rounded pr-10"
+                >세부 Challenge 2</RouterLink
+              >
+              <RouterLink to="/challenge/detail3" class="rounded pr-10"
+                >세부 Challenge 3</RouterLink
+              >
+            </div>
           </div>
-          <div class="flex flex-col space-y-2 justify-center items-center">
+          <div
+            class="navbar-item-box flex flex-col space-y-2 justify-center items-center border-solid border-r-2 border-gray-300"
+          >
             <RouterLink
-              to="/util/detail1"
-              class="navbar-item rounded hover:bg-gray-200"
-              >세부 Util 1</RouterLink
+              to="/util"
+              class="navbar-item rounded text-[#222] font-[600] text-base w-full pr-10"
+              >싸피 Util</RouterLink
             >
-            <RouterLink
-              to="/util/detail2"
-              class="navbar-item rounded hover:bg-gray-200"
-              >세부 Util 2</RouterLink
-            >
-            <RouterLink
-              to="/util/detail3"
-              class="navbar-item rounded hover:bg-gray-200"
-              >세부 Util 3</RouterLink
-            >
+            <div class="pl-1 flex flex-col gap-1">
+              <RouterLink to="/util/detail1" class="rounded w-full pr-10"
+                >세부 Util 1</RouterLink
+              >
+              <RouterLink to="/util/detail2" class="rounded pr-10"
+                >세부 Util 2</RouterLink
+              >
+              <RouterLink to="/util/detail3" class="rounded pr-10"
+                >세부 Util 3</RouterLink
+              >
+            </div>
           </div>
         </div>
       </div>
@@ -152,4 +174,20 @@ const handleScroll = () => {
 window.addEventListener("scroll", handleScroll);
 </script>
 
-<style scoped></style>
+<style scoped>
+.navbar-item:hover {
+  color: var(--ssafy-blue);
+  transition: all 0.3s;
+}
+.navbar-item-box:hover .navbar-item {
+  color: var(--ssafy-blue);
+  transition: all 0.3s;
+}
+.navbar-item-box > div > *:hover {
+  color: var(--ssafy-blue);
+  transition: all 0.3s;
+}
+.router-active {
+  color: var(--ssafy-blue);
+}
+</style>

@@ -107,43 +107,68 @@ const signinData = ref({
 const authStore = useAuthStore();
 
 const signin = async () => {
-  // 유효성 검사
   if (validation()) {
     return;
   }
 
   try {
     const response = await postSignIn(signinData.value);
+    const token = response.headers["access-token"];
 
-    if (response.data.success) {
-      const token = response.headers["access-token"];
-      if (token) {
-        authStore.setToken(token);
-        signinData.value = {
-          email: "",
-          password: "",
-        };
-        console.log("로그인 성공. 토큰이 쿠키에 저장되었습니다.");
-
-        try {
-          const userDataResponse = await getUserData();
-          setUserDataToSession(userDataResponse.data);
-          router.push("/");
-        } catch (error) {
-          console.log(error);
-        }
-      } else {
-        console.warn("로그인 성공하였으나 토큰이 없습니다.");
-      }
+    if (token) {
+      authStore.setToken(token);
+      const userData = await getUserData();
+      sessionStorage.setItem("userData", JSON.stringify(userData.data));
+      router.push("/");
+    } else {
+      error.value.message = "인증 토큰을 받지 못했습니다.";
     }
-  } catch (error) {
-    console.log(error);
+  } catch (err) {
+    error.value.message =
+      err.response?.data?.message || "로그인에 실패했습니다.";
+    console.error("로그인 실패:", err);
   }
 };
 
-const setUserDataToSession = (userData) => {
-  sessionStorage.setItem("userData", JSON.stringify(userData));
-};
+// 기존
+// const signin = async () => {
+//   // 유효성 검사
+//   if (validation()) {
+//     return;
+//   }
+
+//   try {
+//     const response = await postSignIn(signinData.value);
+
+//     if (response.data.success) {
+//       const token = response.headers["access-token"];
+//       if (token) {
+//         authStore.setToken(token);
+//         signinData.value = {
+//           email: "",
+//           password: "",
+//         };
+//         console.log("로그인 성공. 토큰이 쿠키에 저장되었습니다.");
+
+//         try {
+//           const userDataResponse = await getUserData();
+//           setUserDataToSession(userDataResponse.data);
+//           router.push("/");
+//         } catch (error) {
+//           console.log(error);
+//         }
+//       } else {
+//         console.warn("로그인 성공하였으나 토큰이 없습니다.");
+//       }
+//     }
+//   } catch (error) {
+//     console.log(error);
+//   }
+// };
+
+// const setUserDataToSession = (userData) => {
+//   sessionStorage.setItem("userData", JSON.stringify(userData));
+// };
 </script>
 
 <style scoped>

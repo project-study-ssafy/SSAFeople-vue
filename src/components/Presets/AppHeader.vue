@@ -41,7 +41,8 @@ h3 {
 }
 h4 {
   font-size: 1.25rem;
-  font-weight: normal;
+  font-weight: 600;
+  color: #222;
 }
 h5 {
   font-size: 1rem;

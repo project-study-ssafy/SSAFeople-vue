@@ -9,8 +9,12 @@ export const useAuthStore = defineStore("auth", {
   }),
   actions: {
     setToken(token) {
-      this.token = token; // 상태 업데이트
-      cookies.set("access-token", token, { expires: "1d" }); // 쿠키에 저장
+      this.token = token;
+      cookies.set("access-token", token, {
+        expires: "1d",
+        secure: true,
+        sameSite: "Lax",
+      });
     },
     clearToken() {
       this.token = null; // 상태 초기화

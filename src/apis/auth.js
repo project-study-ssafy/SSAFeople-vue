@@ -3,11 +3,12 @@ import axios from "axios";
 import { useAuthStore } from "@/stores/auth";
 
 const apiClient = axios.create({
+  // baseURL: VITE_MAIN_API_SERVER_URL, // API의 기본 URL을 설정하세요.
   baseURL: import.meta.env.VITE_MAIN_API_SERVER_URL, // API의 기본 URL을 설정하세요.
   headers: {
     "Content-Type": "application/json",
   },
-  withCredentials: false,
+  withCredentials: true, // CORS 관련 설정 변경
 });
 
 // API 정의 부분
@@ -18,7 +19,8 @@ export const postRegister = async (data) => {
     const response = await apiClient.post(import.meta.env.VITE_USERS, data);
     return response.data;
   } catch (error) {
-    console.log("API 요청 에러:", error);
+    console.error("회원가입 실패:", error.response?.data || error.message);
+    // console.log("API 요청 에러:", error);
     throw error;
   }
 };
@@ -28,16 +30,17 @@ export const postEmailVerificationCode = async (data) => {
   try {
     console.log(
       import.meta.env.VITE_MAIN_API_SERVER_URL +
-        import.meta.env.VITE_SEND_EMAIL_VERIFICATION_CODE,
+        import.meta.env.VITE_SEND_EMAIL_VERIFICATION_CODE
     );
     // console.log(data)
     const response = await apiClient.post(
       import.meta.env.VITE_SEND_EMAIL_VERIFICATION_CODE,
-      data,
+      data
     );
     return response.data;
   } catch (error) {
-    console.log("API 요청 에러:", error);
+    console.error("이메일 인증 코드 전송 실패:", error.response?.data);
+    // console.log("API 요청 에러:", error);
     throw error;
   }
 };
@@ -47,7 +50,7 @@ export const postEmailVerification = async (data) => {
   try {
     const response = await apiClient.post(
       import.meta.env.VITE_EMAIL_VERIFY,
-      data,
+      data
     );
     return response.data;
   } catch (error) {
@@ -60,10 +63,11 @@ export const postEmailVerification = async (data) => {
 export const postSignIn = async (data) => {
   try {
     const response = await apiClient.post(import.meta.env.VITE_SIGNIN, data);
-
+    console.log("로그인 응답:", response);
     return response;
   } catch (error) {
-    console.log("API 요청 에러:", error);
+    // console.log("API 요청 에러:", error);
+    console.error("로그인 실패:", error.response?.data || error.message);
     throw error;
   }
 };

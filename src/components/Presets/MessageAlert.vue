@@ -6,11 +6,15 @@
         {{ unreadMessages }}
       </span>
     </div>
-    <MessageModal
-      :isVisible="isModalVisible"
-      @update:isVisible="updateModalVisibility"
-      @close="closeModal"
-    />
+    <Transition name="modal">
+      <MessageModal
+        v-if="isModalVisible"
+        :isVisible="isModalVisible"
+        @update:isVisible="updateModalVisibility"
+        @close="closeModal"
+        class="relative"
+      />
+    </Transition>
   </div>
 </template>
 
@@ -18,12 +22,13 @@
 import { ref, onMounted, onUnmounted } from "vue";
 import msgIcon from "@/assets/msg_icon.svg";
 import MessageModal from "@/components/Presets/MessageModal.vue";
+// import vmodal from "vue-js-modal";
 
 const unreadMessages = ref(0);
 const isModalVisible = ref(false);
 
 const openModal = () => {
-  isModalVisible.value = true;
+  isModalVisible.value = !isModalVisible.value;
 };
 
 const closeModal = () => {
@@ -70,5 +75,30 @@ onUnmounted(() => {
   font-size: 7px;
   line-height: 15px;
   text-align: center;
+}
+/* 모달 애니메이션 */
+.modal-enter-active,
+.modal-leave-active {
+  transition: all 0.3s ease;
+}
+
+.modal-enter-from {
+  opacity: 0;
+  transform: scale(0.8) translate(-50px, -50px);
+}
+
+.modal-enter-to {
+  opacity: 1;
+  transform: scale(1) translateY(0);
+}
+
+.modal-leave-from {
+  opacity: 1;
+  transform: scale(1) translateY(0);
+}
+
+.modal-leave-to {
+  opacity: 0;
+  transform: scale(0.8) translate(-50px, -50px);
 }
 </style>

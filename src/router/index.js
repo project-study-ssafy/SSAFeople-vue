@@ -22,17 +22,61 @@ const router = createRouter({
             import(
               "@/components/MainContainer/Contents/MainContentViews/MainBoard.vue"
             ),
-          beforeEnter: (to, from, next) => {
-            const authStore = useAuthStore();
-            if (!authStore.token) {
-              // 토큰이 없으면 로그인 페이지로 리다이렉트
-              next({ name: "Signin" });
-            } else {
-              // 토큰이 있으면 다음 페이지로 이동
-              next();
-            }
-          },
+          // beforeEnter: (to, from, next) => {
+          //   const authStore = useAuthStore();
+          //   if (!authStore.token) {
+          //     // 토큰이 없으면 로그인 페이지로 리다이렉트
+          //     next({ name: "Signin" });
+          //   } else {
+          //     // 토큰이 있으면 다음 페이지로 이동
+          //     next();
+          //   }
+          // },
         },
+        // 싸뮤니티 게시판 리스트
+        {
+          // C:\SSAFY\SSAFeople-vue\src\views\Ssammunity\SsammunityLayout.vue
+          path: "/ssammunity",
+          component: () => import("@/views/Ssammunity/SsammunityLayout.vue"),
+          children: [
+            {
+              path: "",
+              component: () => import("@/views/Ssammunity/AllPostsView.vue"),
+            },
+            {
+              path: "free",
+              component: () => import("@/views/Ssammunity/FreeBoardView.vue"),
+            },
+            {
+              path: "greeting",
+              component: () =>
+                import("@/views/Ssammunity/GreetingBoardView.vue"),
+            },
+            {
+              path: "anonymous",
+              component: () =>
+                import("@/views/Ssammunity/AnonymousBoardView.vue"),
+            },
+            {
+              path: "board/:postId",
+              name: "BoardDetail",
+              component: () => import("@/views/Ssammunity/BoardDetailView.vue"),
+              props: true, // URL의 파라미터를 props로 전달
+            },
+            {
+              path: "/board/write",
+              name: "PostForm",
+              component: () => import("@/views/Ssammunity/PostFormView.vue"),
+            },
+            {
+              path: "/board/edit/:postId",
+              name: "PostEdit",
+              component: () => import("@/views/Ssammunity/PostFormView.vue"),
+            },
+          ],
+        },
+        // 싸뮤니티 게시판 상세 보기
+
         {
           path: "/info",
           component: () =>

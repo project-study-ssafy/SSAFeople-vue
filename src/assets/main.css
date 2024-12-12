@@ -6,3 +6,97 @@ body {
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+body {
+  overflow-y: overlay; /* 반드시 overlay 처리 */
+}
+
+html {
+  /* 세로 스크롤 overlay 처리 */
+  overflow-y: overlay;
+
+  /* 스크롤바의 box-shadow 색상값을 지정 */
+  color: blue;
+  transition: all 0.4s ease; /* 부드러운 애니메이션 */
+}
+
+::-webkit-scrollbar {
+  width: 14px;
+  height: 14px;
+}
+
+::-webkit-scrollbar-thumb {
+  outline: none;
+  border-radius: 10px;
+  border: 4px solid transparent;
+  box-shadow: inset 6px 6px 0 rgba(34, 34, 34, 0.15);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  border: 4px solid transparent;
+  box-shadow: inset 6px 6px 0 rgba(34, 34, 34, 0.3);
+}
+
+::-webkit-scrollbar-track {
+  box-shadow: none;
+  background-color: transparent;
+}
+
+html.scroll-hidden {
+  color: transparent;
+}
+
+/**********
+RESET - S
+**********/
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  vertical-align: baseline;
+}
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+menu,
+nav,
+section,
+main {
+  display: block;
+}
+ol,
+ul {
+  list-style: none;
+}
+em {
+  font-style: normal;
+}
+strong {
+  font-weight: normal;
+}
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+/**********
+RESET - E
+**********/
+
+/**********
+SWIPER - S
+**********/
+
+/**********
+SWIPER - E
+**********/
