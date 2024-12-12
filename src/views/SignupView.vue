@@ -108,9 +108,11 @@
             :class="{ 'border-red-500': errors.password }"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-black outline-none focus:bg-transparent h-10"
           />
-          <span v-if="errors.password" class="text-red-500 text-sm">{{
-            errors.password
-          }}</span>
+          <span
+            v-if="errors.password"
+            v-html="errors.password"
+            class="text-red-500 text-sm"
+          ></span>
         </div>
 
         <div class="mb-4">
@@ -132,13 +134,12 @@
             errors.passwordconfirm
           }}</span>
         </div>
-
-        <button
+        <AppButton
           type="submit"
-          class="w-full bg-blue-500 text-white font-bold py-2 rounded-md hover:bg-blue-600 transition duration-200"
-        >
-          가입하기
-        </button>
+          button-type="ellipse-filled"
+          text="회원가입"
+          class="w-full"
+        />
       </form>
     </div>
     <div class="col-span-1"></div>
@@ -216,7 +217,7 @@ const validateUserData = () => {
   const passwordPattern = /^(?=.*[\W_]).{6,12}$/;
   if (!passwordPattern.test(userData.value.password)) {
     errors.value.password =
-      "비밀번호는 6자리 이상 12자리 이하이며, 특수문자가 최소 1개 이상 포함되어야 합니다.";
+      "비밀번호는 6자리 이상 12자리 이하이며,<br>특수문자가 최소 1개 이상 포함되어야 합니다.";
   }
 
   // 비밀번호 확인: 6~12자, 특수문자 포함
@@ -252,7 +253,7 @@ const register = async () => {
         timer: 1500,
       }).then(() => {
         console.log("회원가입 성공", response.data);
-        router.push("/");
+        router.push("/signin");
       });
     } catch (error) {
       Swal.fire({
