@@ -95,3 +95,25 @@ export const postEmailVerification = async (data) => {
     throw error;
   }
 };
+
+// README.md 수정
+export const modifyReadme = async (data) => {
+  try {
+    const authStore = useAuthStore();
+    const token = authStore.token;
+
+    const response = await apiClient.post(
+      import.meta.env.VITE_USERS + import.meta.env.VITE_MODIFY_README,
+      data,
+      {
+        headers: {
+          "access-token": token, // 헤더에 토큰 추가
+        },
+      },
+    );
+    return response.data;
+  } catch (error) {
+    console.log("API 요청 에러:", error);
+    throw error;
+  }
+};
