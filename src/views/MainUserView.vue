@@ -16,62 +16,99 @@
             alt="프로필"
             class="w-30 h-30 rounded-full mb-4"
           />
-          <div class="w-3/4">
-            <AppHeader :type="4" text="이름" class="font-semibold" />
-            <AppHeader :type="5" text="이메일" class="font-semibold" />
-            <AppHeader :type="5" text="소개" class="font-semibold" />
+          <div class="text-center">
+            <AppHeader
+              :type="4"
+              :text="userinfo.username"
+              class="font-semibold"
+            />
+            <AppHeader :type="6" :text="userinfo.email" class="font-semibold" />
+            <p>{{ userinfo.biography }}</p>
           </div>
         </div>
         <!-- 정보, 게시글, 회원수정, 등 -->
         <div class="bg-white rounded-xl border border-gray-300 p-2">
           <RouterLink
             :to="{ name: 'User', params: { id: route.params.id } }"
-            class="w-full block p-2 flex justify-between"
+            class="w-full p-2 flex justify-between"
             ><span class="font-semibold">README.md</span
             ><span class="font-semibold">></span></RouterLink
           >
           <hr />
           <RouterLink
             :to="{ name: 'UserBoard', params: { id: route.params.id } }"
-            class="w-full block p-2 flex justify-between"
+            class="w-full p-2 flex justify-between"
             ><span class="font-semibold">게시글</span
             ><span class="font-semibold">></span></RouterLink
           >
           <div v-if="checkAdministrator()">
             <hr />
             <RouterLink
-              :to="{ name: 'UserInfoSetting', params: { id: route.params.id } }"
-              class="w-full block p-2 flex justify-between"
-              ><span class="font-semibold">회원정보 수정</span
-              ><span class="font-semibold">></span></RouterLink
-            >
-            <hr />
-            <RouterLink
               :to="{
                 name: 'UserReadmeSetting',
                 params: { id: route.params.id },
               }"
-              class="w-full block p-2 flex justify-between"
-              ><span class="font-semibold">README.md 수정</span
-              ><span class="font-semibold">></span></RouterLink
+              class="w-full p-2 flex justify-between"
             >
+              <span class="font-semibold">README.md 수정</span>
+              <span class="font-semibold">></span>
+            </RouterLink>
+            <hr />
+            <RouterLink
+              :to="{ name: 'UserInfoSetting', params: { id: route.params.id } }"
+              class="w-full p-2 flex justify-between"
+            >
+              <span class="font-semibold">회원정보 수정</span>
+              <span class="font-semibold">></span>
+            </RouterLink>
+            <hr />
+            <!-- 비밀번호 변경 추가해야 함 -->
+            <RouterLink
+              :to="{ name: 'UserInfoSetting', params: { id: route.params.id } }"
+              class="w-full p-2 flex justify-between"
+            >
+              <span class="font-semibold">비밀번호 수정</span>
+              <span class="font-semibold">></span>
+            </RouterLink>
           </div>
         </div>
       </div>
       <RouterView
         class="col-span-4 bg-white rounded-xl border border-gray-300 p-5 min-h-[450px]"
+        :user-info="userinfo"
       />
     </div>
     <div class="col-span-1"></div>
   </div>
 </template>
 <script setup>
-import { RouterView, useRoute } from "vue-router";
+import { onMounted, ref } from "vue";
+import { RouterView, useRoute, useRouter } from "vue-router";
 import { MainHeader, MainNavigation, AppHeader } from "@/components";
 import { useUserStore } from "@/stores/auth";
+import { getUserData } from "@/apis";
 
 const route = useRoute();
+const router = useRouter();
+
 const userStore = useUserStore();
+const userinfo = ref({
+  username: "",
+  email: "로딩 중...",
+  biography: "",
+});
+
+onMounted(async () => {
+  try {
+    const id = route.params.id;
+    const userDataResponse = await getUserData(id);
+    console.log(userDataResponse.data);
+    userinfo.value = userDataResponse.data;
+  } catch (error) {
+    console.log(error);
+    router.push({ name: "NotFound" });
+  }
+});
 
 const checkAdministrator = () => {
   if (route.params.id == userStore.userData.id) {
