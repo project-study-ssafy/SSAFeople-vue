@@ -95,7 +95,15 @@ const modify = async (data) => {
     // 부모 userinfo.readme 업데이트
     emit("updateReadme", data);
     console.log(response);
-    router.push(`/user/${route.params.id}`);
+    Swal.fire({
+      icon: "success",
+      title: "수정 성공",
+      text: "회원님의 README.md가 수정되었습니다!",
+      showConfirmButton: false,
+      timer: 1500,
+    }).then(() => {
+      router.push(`/user/${route.params.id}`);
+    });
   } catch (error) {
     Swal.fire({
       icon: "error",
