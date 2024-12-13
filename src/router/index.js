@@ -1,6 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
 import { useAuthStore, useUserStore } from "@/stores/auth";
-import { useRoute } from "vue-router";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -138,8 +137,7 @@ const router = createRouter({
             import("@/components/MainUser/UserModifyUserData.vue"),
           beforeEnter: (to, from, next) => {
             const userStore = useUserStore();
-            const route = useRoute();
-            if (route.params.id == userStore.userData.id) {
+            if (to.params.id == userStore.userData.id) {
               next();
             } else {
               next({ name: "NotFound" });
@@ -152,8 +150,7 @@ const router = createRouter({
           component: () => import("@/components/MainUser/UserModifyReadme.vue"),
           beforeEnter: (to, from, next) => {
             const userStore = useUserStore();
-            const route = useRoute();
-            if (route.params.id == userStore.userData.id) {
+            if (to.params.id == userStore.userData.id) {
               next();
             } else {
               next({ name: "NotFound" });
