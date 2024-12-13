@@ -17,7 +17,6 @@
 import { computed } from "vue";
 import { AppHeader } from "@/components";
 import markdownit from "markdown-it";
-// import TurndownService from 'turndown';
 
 const props = defineProps({
   userInfo: {},
@@ -29,7 +28,7 @@ const md = markdownit({
 });
 
 const renderedMarkdown = computed(() => {
-  return props.userInfo.readme ? md.render(props.userInfo.readme) : "";
+  return md.render(props.userInfo.readme || "");
 });
 </script>
 <style>
