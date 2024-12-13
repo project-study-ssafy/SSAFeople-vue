@@ -1,75 +1,78 @@
 <template>
-  <form
-    @submit.prevent="modifyData"
-    class="w-full rounded-lg bg-white"
-    novalidate
-  >
-    <AppHeader :type="2" text="회원 정보 수정" />
+  <div class="w-full">
+    <AppHeader :type="2" text="회원정보 수정" />
     <hr />
-    <div class="my-4">
-      <label for="username" class="block text-sm font-extrabold text-gray-700"
-        >사용자 이름</label
-      >
-      <input
-        type="text"
-        id="username"
-        v-model="userData.username"
-        :disabled="true"
-        required
-        :class="{ 'border-red-500': errors.username }"
-        class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-black outline-none focus:bg-transparent h-10"
-      />
-      <span v-if="errors.username" class="text-red-500 text-sm">{{
-        errors.username
-      }}</span>
-    </div>
+    <form
+      @submit.prevent="modifyData"
+      class="w-1/2 mx-auto mt-10 rounded-lg bg-white"
+      novalidate
+    >
+      <div class="my-4">
+        <label for="username" class="block text-sm font-extrabold text-gray-700"
+          >사용자 이름</label
+        >
+        <input
+          type="text"
+          id="username"
+          v-model="userData.username"
+          :disabled="true"
+          required
+          :class="{ 'border-red-500': errors.username }"
+          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-black outline-none focus:bg-transparent h-10"
+        />
+        <span v-if="errors.username" class="text-red-500 text-sm">{{
+          errors.username
+        }}</span>
+      </div>
 
-    <div class="mb-4">
-      <label for="nickname" class="block text-sm font-extrabold text-gray-700"
-        >닉네임</label
-      >
-      <input
-        type="text"
-        id="nickname"
-        @input="test"
-        v-model="userData.nickname"
-        autocomplete="off"
-        required
-        :class="{ 'border-red-500': errors.nickname }"
-        class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-black outline-none focus:bg-transparent h-10"
-      />
-      <span v-if="errors.nickname" class="text-red-500 text-sm">{{
-        errors.nickname
-      }}</span>
-    </div>
+      <div class="mb-4">
+        <label for="nickname" class="block text-sm font-extrabold text-gray-700"
+          >닉네임</label
+        >
+        <input
+          type="text"
+          id="nickname"
+          v-model="userData.nickname"
+          autocomplete="off"
+          required
+          :class="{ 'border-red-500': errors.nickname }"
+          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-black outline-none focus:bg-transparent h-10"
+        />
+        <span v-if="errors.nickname" class="text-red-500 text-sm">{{
+          errors.nickname
+        }}</span>
+      </div>
 
-    <div class="mb-4">
-      <label for="biography" class="block text-sm font-extrabold text-gray-700"
-        >한 줄 소개</label
-      >
-      <input
-        type="text"
-        id="biography"
-        v-model="userData.biography"
-        autocomplete="off"
-        required
-        :class="{ 'border-red-500': errors.biography }"
-        class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-black outline-none focus:bg-transparent h-10"
-      />
-      <span
-        v-if="errors.biography"
-        v-html="errors.biography"
-        class="text-red-500 text-sm"
-      ></span>
-    </div>
+      <div class="mb-4">
+        <label
+          for="biography"
+          class="block text-sm font-extrabold text-gray-700"
+          >한 줄 소개</label
+        >
+        <input
+          type="text"
+          id="biography"
+          v-model="userData.biography"
+          autocomplete="off"
+          required
+          :class="{ 'border-red-500': errors.biography }"
+          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-black outline-none focus:bg-transparent h-10"
+        />
+        <span
+          v-if="errors.biography"
+          v-html="errors.biography"
+          class="text-red-500 text-sm"
+        ></span>
+      </div>
 
-    <AppButton
-      type="submit"
-      button-type="ellipse-filled"
-      text="저장"
-      class="w-full"
-    />
-  </form>
+      <AppButton
+        type="submit"
+        button-type="ellipse-filled"
+        text="저장"
+        class="w-full"
+      />
+    </form>
+  </div>
 </template>
 
 <script setup>
@@ -92,11 +95,6 @@ const userData = ref({
   nickname: "",
   biography: "",
 });
-
-const test = () => {
-  console.log(props.userInfo);
-  console.log(userData.value);
-};
 
 onMounted(async () => {
   userData.value = JSON.parse(JSON.stringify(props.userInfo));
