@@ -64,7 +64,10 @@
             <hr />
             <!-- 비밀번호 변경 추가해야 함 -->
             <RouterLink
-              :to="{ name: 'UserInfoSetting', params: { id: route.params.id } }"
+              :to="{
+                name: 'UserPasswordSetting',
+                params: { id: route.params.id },
+              }"
               class="w-full p-2 flex justify-between"
             >
               <span class="font-semibold">비밀번호 수정</span>

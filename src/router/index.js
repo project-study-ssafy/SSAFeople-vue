@@ -145,6 +145,20 @@ const router = createRouter({
           },
         },
         {
+          path: "setting-user-password",
+          name: "UserPasswordSetting",
+          component: () =>
+            import("@/components/MainUser/UserModifyUserPassword.vue"),
+          beforeEnter: (to, from, next) => {
+            const userStore = useUserStore();
+            if (to.params.id == userStore.userData.id) {
+              next();
+            } else {
+              next({ name: "NotFound" });
+            }
+          },
+        },
+        {
           path: "setting-readme",
           name: "UserReadmeSetting",
           component: () => import("@/components/MainUser/UserModifyReadme.vue"),
