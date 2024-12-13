@@ -19,7 +19,7 @@
           <div class="text-center">
             <AppHeader
               :type="4"
-              :text="userinfo.username"
+              :text="userinfo.nickname + ' (' + userinfo.username + ')'"
               class="font-semibold"
             />
             <AppHeader :type="6" :text="userinfo.email" class="font-semibold" />
@@ -76,6 +76,8 @@
       <RouterView
         class="col-span-4 bg-white rounded-xl border border-gray-300 p-5 min-h-[450px]"
         :user-info="userinfo"
+        @update-readme="updateReadme"
+        @update-user-info="updateUserInfo"
       />
     </div>
     <div class="col-span-1"></div>
@@ -94,6 +96,7 @@ const router = useRouter();
 const userStore = useUserStore();
 const userinfo = ref({
   username: "",
+  nickname: "",
   email: "로딩 중...",
   biography: "",
 });
@@ -102,7 +105,6 @@ onMounted(async () => {
   try {
     const id = route.params.id;
     const userDataResponse = await getUserData(id);
-    console.log(userDataResponse.data);
     userinfo.value = userDataResponse.data;
   } catch (error) {
     console.log(error);
@@ -115,6 +117,14 @@ const checkAdministrator = () => {
     return true;
   }
   return false;
+};
+
+const updateReadme = (readme) => {
+  userinfo.value.readme = readme;
+};
+
+const updateUserInfo = (data) => {
+  userinfo.value = data;
 };
 </script>
 <style scoped></style>

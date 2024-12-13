@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
-import { useAuthStore } from "@/stores/auth";
+import { useAuthStore, useUserStore } from "@/stores/auth";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -135,11 +135,27 @@ const router = createRouter({
           name: "UserInfoSetting",
           component: () =>
             import("@/components/MainUser/UserModifyUserData.vue"),
+          beforeEnter: (to, from, next) => {
+            const userStore = useUserStore();
+            if (to.params.id == userStore.userData.id) {
+              next();
+            } else {
+              next({ name: "NotFound" });
+            }
+          },
         },
         {
           path: "setting-readme",
           name: "UserReadmeSetting",
           component: () => import("@/components/MainUser/UserModifyReadme.vue"),
+          beforeEnter: (to, from, next) => {
+            const userStore = useUserStore();
+            if (to.params.id == userStore.userData.id) {
+              next();
+            } else {
+              next({ name: "NotFound" });
+            }
+          },
         },
       ],
     },
