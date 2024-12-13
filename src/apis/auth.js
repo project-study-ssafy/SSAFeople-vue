@@ -117,3 +117,21 @@ export const modifyReadme = async (data) => {
     throw error;
   }
 };
+
+// 회원정보 수정
+export const modifyUserData = async (data) => {
+  try {
+    const authStore = useAuthStore();
+    const token = authStore.token;
+
+    const response = await apiClient.patch(import.meta.env.VITE_USERS, data, {
+      headers: {
+        "access-token": token, // 헤더에 토큰 추가
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.log("API 요청 에러:", error);
+    throw error;
+  }
+};

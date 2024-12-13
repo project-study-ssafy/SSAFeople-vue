@@ -77,6 +77,7 @@
         class="col-span-4 bg-white rounded-xl border border-gray-300 p-5 min-h-[450px]"
         :user-info="userinfo"
         @update-readme="updateReadme"
+        @update-user-info="updateUserInfo"
       />
     </div>
     <div class="col-span-1"></div>
@@ -120,6 +121,10 @@ const checkAdministrator = () => {
 
 const updateReadme = (readme) => {
   userinfo.value.readme = readme;
+};
+
+const updateUserInfo = (data) => {
+  userinfo.value = data;
 };
 </script>
 <style scoped></style>
