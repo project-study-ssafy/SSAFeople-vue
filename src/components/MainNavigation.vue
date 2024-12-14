@@ -10,6 +10,7 @@
           <img :src="LogoImage" alt="로고" />
         </RouterLink>
         <div
+          ref="menuArea"
           class="hamburger flex flex-col cursor-pointer px-10 py-10 absolute"
           :class="showLogo ? 'hidden' : 'block'"
           @click="toggleMenu"
@@ -135,6 +136,7 @@ import LogoImage from "@/assets/logo.svg";
 
 const isMenuOpen = ref(false); // 메뉴 상태를 관리
 const showLogo = ref(false);
+const menuArea = ref(null);
 
 const toggleMenu = () => {
   isMenuOpen.value = !isMenuOpen.value; // 메뉴 상태 토글
@@ -149,7 +151,14 @@ const handleScroll = () => {
   }
 };
 
+const handleClick = (e) => {
+  if (menuArea.value && !menuArea.value.contains(e.target)) {
+    isMenuOpen.value = false;
+  }
+};
+
 window.addEventListener("scroll", handleScroll);
+window.addEventListener("click", handleClick);
 </script>
 
 <style scoped></style>
