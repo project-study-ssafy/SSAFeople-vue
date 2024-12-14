@@ -5,15 +5,10 @@ export { default as MainFooter } from "./MainFooter.vue";
 export { default as MainTopbar } from "./MainTopbar.vue";
 
 // MainView component exports
-export { default as MainContent } from "./MainView/MainContent.vue";
 export { default as AdditionalContent } from "./MainView/AdditionalContent.vue";
 
-// MainUserView component exports
-// export { default as UserModify } from "./MainUser/UserModifyReadme.vue"
-
 // SideContent component exports
-export { default as SideContent } from "./MainView/Contents/SideContent.vue";
-export { default as UserProfile } from "./MainView/Contents/SideContents/UserProfile.vue";
+export { default as UserProfile } from "./MainView/MainContent/UserProfile.vue";
 
 // Presets component exports
 export { default as AppHeader } from "./Presets/AppHeader.vue";

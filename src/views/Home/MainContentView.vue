@@ -1,13 +1,9 @@
-<script setup>
-import { MainFooter, MainTopbar } from "@/components";
-</script>
-
 <template>
-  <div
-    class="min-w-[1280px] grid grid-cols-[1fr_minmax(1148px,_1280px)_1fr] gap-x-3 bg-white"
-  >
-    <MainTopbar class="col-span-3" />
-    <RouterView v-slot="{ Component }">
+  <div class="flex gap-5 my-5">
+    <RouterView
+      v-slot="{ Component }"
+      class="bg-white flex-none basis-9/12 rounded-xl"
+    >
       <Transition
         enter-active-class="transition-opacity duration-200 ease-in-out"
         enter-from-class="opacity-0"
@@ -21,8 +17,12 @@ import { MainFooter, MainTopbar } from "@/components";
         <component :is="Component" />
       </Transition>
     </RouterView>
-    <MainFooter class="col-span-3" />
+    <UserProfile class="basis-3/12" />
   </div>
 </template>
+
+<script setup>
+import { UserProfile } from "@/components";
+</script>
 
 <style scoped></style>

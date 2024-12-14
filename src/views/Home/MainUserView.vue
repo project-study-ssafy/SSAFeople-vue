@@ -1,9 +1,5 @@
 <template>
-  <MainHeader class="col-span-3" />
-  <MainNavigation class="col-span-3" />
-  <div
-    class="col-span-3 grid grid-cols-[1fr_minmax(1148px,_1280px)_1fr] bg-white"
-  >
+  <div class="grid grid-cols-[1fr_minmax(1148px,_1280px)_1fr] bg-white">
     <div class="col-span-1"></div>
     <div class="col-span-1 grid grid-cols-5 gap-5 my-5">
       <div class="col-span-1 space-y-5">
@@ -77,19 +73,39 @@
         </div>
       </div>
       <RouterView
+        v-slot="{ Component }"
         class="col-span-4 bg-white rounded-xl border border-gray-300 p-5 min-h-[450px]"
         :user-info="userinfo"
         @update-readme="updateReadme"
         @update-user-info="updateUserInfo"
-      />
+      >
+        <Transition
+          enter-active-class="transition-opacity duration-200 ease-in-out"
+          enter-from-class="opacity-0"
+          enter-to-class="opacity-100"
+          leave-active-class="transition-opacity duration-200 ease-in-out"
+          leave-from-class="opacity-100"
+          leave-to-class="opacity-0"
+          mode="out-in"
+        >
+          <!-- <RouterView /> -->
+          <component :is="Component" />
+        </Transition>
+      </RouterView>
+      <!-- <RouterView
+        class="col-span-4 bg-white rounded-xl border border-gray-300 p-5 min-h-[450px]"
+        :user-info="userinfo"
+        @update-readme="updateReadme"
+        @update-user-info="updateUserInfo"
+      /> -->
     </div>
     <div class="col-span-1"></div>
   </div>
 </template>
 <script setup>
 import { onMounted, ref } from "vue";
-import { RouterView, useRoute, useRouter } from "vue-router";
-import { MainHeader, MainNavigation, AppHeader } from "@/components";
+import { useRoute, useRouter } from "vue-router";
+import { AppHeader } from "@/components";
 import { useUserStore } from "@/stores/auth";
 import { getUserData } from "@/apis";
 

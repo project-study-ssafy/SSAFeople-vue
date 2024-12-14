@@ -98,7 +98,6 @@ const userData = ref({
 
 onMounted(async () => {
   userData.value = JSON.parse(JSON.stringify(props.userInfo));
-  console.log(userData);
 });
 
 const errors = ref({
