@@ -17,4 +17,7 @@ export default defineConfig({
     //     '/': 'http://localhost:8080'
     // }
   },
+  html: {
+    lang: "ko",
+  },
 });
