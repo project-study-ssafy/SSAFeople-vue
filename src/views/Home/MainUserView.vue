@@ -122,9 +122,12 @@ const userinfo = ref({
 
 onMounted(async () => {
   try {
-    const id = route.params.id;
-    const userDataResponse = await getUserData(id);
-    userinfo.value = userDataResponse.data;
+    if (checkAdministrator()) {
+      userinfo.value = userStore.userData;
+    } else {
+      const userDataResponse = await getUserData(route.params.id);
+      userinfo.value = userDataResponse.data;
+    }
   } catch (error) {
     console.log(error);
     router.push({ name: "NotFound" });
@@ -140,10 +143,14 @@ const checkAdministrator = () => {
 
 const updateReadme = (readme) => {
   userinfo.value.readme = readme;
+  userStore.setUserData(userinfo.value);
+  console.log(userStore.userData);
 };
 
 const updateUserInfo = (data) => {
   userinfo.value = data;
+  userStore.setUserData(userinfo.value);
+  console.log(userStore.userData);
 };
 </script>
 <style scoped></style>
