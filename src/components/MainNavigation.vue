@@ -55,72 +55,40 @@
         <div
           class="ml-28 grid grid-cols-4 text-center w-[600px] justify-between my-2"
         >
-          <div class="flex flex-col space-y-2 justify-center items-center">
+          <div class="flex flex-col space-y-2 items-center">
             <RouterLink
-              to="/info/detail1"
+              v-for="info in detailMenu.info"
+              :key="info.name"
+              :to="info.to"
               class="navbar-item rounded hover:bg-gray-200"
-              >세부 Info 1</RouterLink
-            >
-            <RouterLink
-              to="/info/detail2"
-              class="navbar-item rounded hover:bg-gray-200"
-              >세부 Info 2</RouterLink
-            >
-            <RouterLink
-              to="/info/detail3"
-              class="navbar-item rounded hover:bg-gray-200"
-              >세부 Info 3</RouterLink
+              >{{ info.name }}</RouterLink
             >
           </div>
-          <div class="flex flex-col space-y-2 justify-center items-center">
+          <div class="flex flex-col space-y-2 items-center">
             <RouterLink
-              to="/board/detail1"
+              v-for="community in detailMenu.community"
+              :key="community.name"
+              :to="community.to"
               class="navbar-item rounded hover:bg-gray-200"
-              >세부 커뮤니티 1</RouterLink
-            >
-            <RouterLink
-              to="/board/detail2"
-              class="navbar-item rounded hover:bg-gray-200"
-              >세부 커뮤니티 2</RouterLink
-            >
-            <RouterLink
-              to="/board/detail3"
-              class="navbar-item rounded hover:bg-gray-200"
-              >세부 커뮤니티 3</RouterLink
+              >{{ community.name }}</RouterLink
             >
           </div>
-          <div class="flex flex-col space-y-2 justify-center items-center">
+          <div class="flex flex-col space-y-2 items-center">
             <RouterLink
-              to="/challenge/detail1"
+              v-for="challenge in detailMenu.challenge"
+              :key="challenge.name"
+              :to="challenge.to"
               class="navbar-item rounded hover:bg-gray-200"
-              >세부 Challenge 1</RouterLink
-            >
-            <RouterLink
-              to="/challenge/detail2"
-              class="navbar-item rounded hover:bg-gray-200"
-              >세부 Challenge 2</RouterLink
-            >
-            <RouterLink
-              to="/challenge/detail3"
-              class="navbar-item rounded hover:bg-gray-200"
-              >세부 Challenge 3</RouterLink
+              >{{ challenge.name }}</RouterLink
             >
           </div>
-          <div class="flex flex-col space-y-2 justify-center items-center">
+          <div class="flex flex-col space-y-2 items-center">
             <RouterLink
-              to="/util/detail1"
+              v-for="util in detailMenu.util"
+              :key="util.name"
+              :to="util.to"
               class="navbar-item rounded hover:bg-gray-200"
-              >세부 Util 1</RouterLink
-            >
-            <RouterLink
-              to="/util/detail2"
-              class="navbar-item rounded hover:bg-gray-200"
-              >세부 Util 2</RouterLink
-            >
-            <RouterLink
-              to="/util/detail3"
-              class="navbar-item rounded hover:bg-gray-200"
-              >세부 Util 3</RouterLink
+              >{{ util.name }}</RouterLink
             >
           </div>
         </div>
@@ -137,6 +105,29 @@ import LogoImage from "@/assets/logo.svg";
 const isMenuOpen = ref(false); // 메뉴 상태를 관리
 const showLogo = ref(false);
 const menuArea = ref(null);
+
+const detailMenu = {
+  info: [
+    { name: "info 1", to: "/info/detail1" },
+    { name: "info 2", to: "/info/detail2" },
+    { name: "info 3", to: "/info/detail3" },
+  ],
+  community: [
+    { name: "community 1", to: "/community/detail1" },
+    { name: "community 2", to: "/community/detail2" },
+    { name: "community 3", to: "/community/detail3" },
+  ],
+  challenge: [
+    { name: "challenge 1", to: "/challenge/detail1" },
+    { name: "challenge 2", to: "/challenge/detail2" },
+    { name: "challenge 3", to: "/challenge/detail3" },
+  ],
+  util: [
+    { name: "util 1", to: "/util/detail1" },
+    { name: "util 2", to: "/util/detail2" },
+    { name: "util 3", to: "/util/detail3" },
+  ],
+};
 
 const toggleMenu = () => {
   isMenuOpen.value = !isMenuOpen.value; // 메뉴 상태 토글
