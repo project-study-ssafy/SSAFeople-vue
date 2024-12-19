@@ -55,41 +55,19 @@
         <div
           class="ml-28 grid grid-cols-4 text-center w-[600px] justify-between my-2"
         >
-          <div class="flex flex-col space-y-2 items-center">
+          <div
+            v-for="(items, category) in detailMenu"
+            :key="category"
+            class="flex flex-col space-y-2 items-center"
+          >
             <RouterLink
-              v-for="info in detailMenu.info"
-              :key="info.name"
-              :to="info.to"
+              v-for="item in items"
+              :key="item.name"
+              :to="item.to"
               class="navbar-item rounded hover:bg-gray-200"
-              >{{ info.name }}</RouterLink
             >
-          </div>
-          <div class="flex flex-col space-y-2 items-center">
-            <RouterLink
-              v-for="community in detailMenu.community"
-              :key="community.name"
-              :to="community.to"
-              class="navbar-item rounded hover:bg-gray-200"
-              >{{ community.name }}</RouterLink
-            >
-          </div>
-          <div class="flex flex-col space-y-2 items-center">
-            <RouterLink
-              v-for="challenge in detailMenu.challenge"
-              :key="challenge.name"
-              :to="challenge.to"
-              class="navbar-item rounded hover:bg-gray-200"
-              >{{ challenge.name }}</RouterLink
-            >
-          </div>
-          <div class="flex flex-col space-y-2 items-center">
-            <RouterLink
-              v-for="util in detailMenu.util"
-              :key="util.name"
-              :to="util.to"
-              class="navbar-item rounded hover:bg-gray-200"
-              >{{ util.name }}</RouterLink
-            >
+              {{ item.name }}
+            </RouterLink>
           </div>
         </div>
       </div>
