@@ -92,8 +92,8 @@ const detailMenu = {
   ],
   community: [
     { name: "community 1", to: "/community/detail1" },
-    { name: "community 2", to: "/community/detail2" },
-    { name: "community 3", to: "/community/detail3" },
+    { name: "community 2", to: "/board/chat/1" },
+    { name: "community 3", to: "/board/chat/2" },
   ],
   challenge: [
     { name: "challenge 1", to: "/challenge/detail1" },

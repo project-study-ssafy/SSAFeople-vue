@@ -26,7 +26,7 @@
 
 <script setup>
 import { ref } from "vue";
-import { AppHeader } from "../../..";
+import { AppHeader } from "@/components";
 const posts = ref([
   {
     id: 1,
