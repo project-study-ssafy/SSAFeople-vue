@@ -144,12 +144,14 @@ const checkAdministrator = () => {
 const updateReadme = (readme) => {
   userinfo.value.readme = readme;
   userStore.setUserData(userinfo.value);
+  sessionStorage.setItem("userData", JSON.stringify(userinfo.value));
   console.log(userStore.userData);
 };
 
 const updateUserInfo = (data) => {
   userinfo.value = data;
   userStore.setUserData(userinfo.value);
+  sessionStorage.setItem("userData", JSON.stringify(userinfo.value));
   console.log(userStore.userData);
 };
 </script>
