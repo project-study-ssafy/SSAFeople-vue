@@ -20,4 +20,7 @@ export default defineConfig({
   html: {
     lang: "ko",
   },
+  define: {
+    global: "window", // 브라우저 환경에서 global을 window로 매핑
+  },
 });
