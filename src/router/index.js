@@ -39,6 +39,22 @@ const router = createRouter({
                   next();
                 }
               },
+              children: [
+                {
+                  path: "",
+                  component: () =>
+                    import(
+                      "@/components/MainView/MainContent/MainContentViews/Boards/TestBoard.vue"
+                    ),
+                },
+                {
+                  path: "chat/:id",
+                  component: () =>
+                    import(
+                      "@/components/MainView/MainContent/MainContentViews/Community/CommunityChat.vue"
+                    ),
+                },
+              ],
             },
             {
               path: "/info",

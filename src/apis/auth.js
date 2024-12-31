@@ -172,3 +172,27 @@ export const postEmailVerificationCodeForPassword = async (data) => {
     throw error;
   }
 };
+
+// 익명채팅 닉네임 변경
+export const postChattingNickname = async (nickname) => {
+  try {
+    const authStore = useAuthStore();
+    const token = authStore.token;
+
+    const response = await apiClient.post(
+      import.meta.env.VITE_USERS + import.meta.env.VITE_CHATTING_NICKNAME,
+      {
+        nickname: nickname,
+      },
+      {
+        headers: {
+          "access-token": token, // 헤더에 토큰 추가
+        },
+      },
+    );
+    return response.data;
+  } catch (error) {
+    console.log("API 요청 에러:", error);
+    throw error;
+  }
+};
