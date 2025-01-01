@@ -47,7 +47,7 @@ import "swiper/css/pagination";
 
 const modules = [Autoplay, Pagination, Navigation];
 
-// 이미지 배열을 작성하거나 props로 받아 사용할 수 있습니다.
+// 이미지 배열을 작성하거나 props로 받아 사용 가능
 const images = [
   "https://picsum.photos/1100/300",
   "https://picsum.photos/1100/300?2",

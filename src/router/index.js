@@ -1,3 +1,5 @@
+// router index.js
+
 import { createRouter, createWebHistory } from "vue-router";
 import { useAuthStore } from "@/stores/auth";
 
@@ -13,14 +15,14 @@ const router = createRouter({
           path: "/",
           component: () =>
             import(
-              "@/components/MainView/Contents/MainContentViews/MainHome.vue"
+              "@/components/MainView/MainContent/MainContentViews/MainHome.vue"
             ),
         },
         {
           path: "/board",
           component: () =>
             import(
-              "@/components/MainView/Contents/MainContentViews/MainBoard.vue"
+              "@/components/MainView/MainContent/MainContentViews/MainBoard.vue"
             ),
           // beforeEnter: (to, from, next) => {
           //   const authStore = useAuthStore();
@@ -37,42 +39,66 @@ const router = createRouter({
         {
           // C:\SSAFY\SSAFeople-vue\src\views\Ssammunity\SsammunityLayout.vue
           path: "/ssammunity",
-          component: () => import("@/views/Ssammunity/SsammunityLayout.vue"),
+          component: () =>
+            import("@/components/MainView/MainUser/UserBoard.vue"),
+          beforeEnter: (to, from, next) => {
+            const authStore = useAuthStore();
+            if (!authStore.token) {
+              // 토큰이 없으면 로그인 페이지로 리다이렉트
+              next({ name: "Signin" });
+            } else {
+              // 토큰이 있으면 다음 페이지로 이동
+              next();
+            }
+          },
           children: [
             {
               path: "",
-              component: () => import("@/views/Ssammunity/AllPostsView.vue"),
-            },
-            {
-              path: "free",
-              component: () => import("@/views/Ssammunity/FreeBoardView.vue"),
-            },
-            {
-              path: "greeting",
               component: () =>
-                import("@/views/Ssammunity/GreetingBoardView.vue"),
+                import("@/components/MainView/MainUser/UserBoardList.vue"),
             },
             {
-              path: "anonymous",
+              path: "/board/:boardId",
+              name: "BoardList",
               component: () =>
-                import("@/views/Ssammunity/AnonymousBoardView.vue"),
+                import("@/components/MainView/MainUser/UserBoardList.vue"),
+              props: true, // URL 파라미터를 props로 전달
             },
             {
-              path: "board/:postId",
+              path: "board/:boardId/:postId",
               name: "BoardDetail",
-              component: () => import("@/views/Ssammunity/BoardDetailView.vue"),
+              component: () =>
+                import("@/components/MainView/MainUser/UserBoardDetail.vue"),
               props: true, // URL의 파라미터를 props로 전달
             },
             {
-              path: "/board/write",
+              path: "/board/:boardId/write",
               name: "PostForm",
-              component: () => import("@/views/Ssammunity/PostFormView.vue"),
+              component: () =>
+                import("@/components/MainView/MainUser/UserBoardPostForm.vue"),
+              props: true,
             },
             {
-              path: "/board/edit/:postId",
+              path: "/board/edit/:boardId/:postId",
               name: "PostEdit",
-              component: () => import("@/views/Ssammunity/PostFormView.vue"),
+              component: () =>
+                import("@/components/MainView/MainUser/UserBoardPostForm.vue"),
+              props: true,
             },
+            // {
+            //   path: "free",
+            //   component: () => import("@/views/Ssammunity/FreeBoardView.vue"),
+            // },
+            // {
+            //   path: "greeting",
+            //   component: () =>
+            //     import("@/views/Ssammunity/GreetingBoardView.vue"),
+            // },
+            // {
+            //   path: "anonymous",
+            //   component: () =>
+            //     import("@/views/Ssammunity/AnonymousBoardView.vue"),
+            // },
           ],
         },
         // 싸뮤니티 게시판 상세 보기
@@ -81,14 +107,14 @@ const router = createRouter({
           path: "/info",
           component: () =>
             import(
-              "@/components/MainView/Contents/MainContentViews/MainInfo.vue"
+              "@/components/MainView/MainContent/MainContentViews/MainInfo.vue"
             ),
         },
         {
           path: "/challenge",
           component: () =>
             import(
-              "@/components/MainView/Contents/MainContentViews/MainChallenge.vue"
+              "@/components/MainView/MainContent/MainContentViews/MainChallenge.vue"
             ),
           beforeEnter: (to, from, next) => {
             const authStore = useAuthStore();
@@ -105,7 +131,7 @@ const router = createRouter({
           path: "/util",
           component: () =>
             import(
-              "@/components/MainView/Contents/MainContentViews/MainUtil.vue"
+              "@/components/MainView/MainContent/MainContentViews/MainUtil.vue"
             ),
           beforeEnter: (to, from, next) => {
             const authStore = useAuthStore();
@@ -152,7 +178,7 @@ const router = createRouter({
     },
     {
       path: "/user/:id",
-      component: () => import("@/views/MainUserView.vue"),
+      component: () => import("@/views/Home/MainUserView.vue"),
       beforeEnter: (to, from, next) => {
         const authStore = useAuthStore();
         if (!authStore.token) {
@@ -174,12 +200,12 @@ const router = createRouter({
           name: "UserBoard",
           component: () => import("@/components/MainUser/UserBoard.vue"),
         },
-        {
-          path: "setting-userinfo",
-          name: "UserInfoSetting",
-          component: () =>
-            import("@/components/MainUser/UserModifyUserData.vue"),
-        },
+        // {
+        //   path: "setting-userinfo",
+        //   name: "UserInfoSetting",
+        //   component: () =>
+        //     // import("@/components/MainUser/UserModifyUserData.vue"), // 오류 발생으로 임시 주석 : yeon
+        // },
         {
           path: "setting-readme",
           name: "UserReadmeSetting",

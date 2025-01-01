@@ -21,14 +21,14 @@
         <ul v-if="isOpen" class="board-list mt-1 border rounded">
           <li
             v-for="board in boards"
-            :key="board.id"
+            :key="board.boardId"
             @click="selectBoard(board)"
             :class="[
               'p-2 cursor-pointer hover:bg-gray-50 transition-all',
-              formData.boardId === board.id ? 'text-blue-500' : '',
+              formData.boardId === board.boardId ? 'text-blue-500' : '',
             ]"
           >
-            {{ board.name }}
+            {{ board.boardName }}
           </li>
         </ul>
       </div>
@@ -139,7 +139,7 @@
 import { ref, computed, onMounted, onUnmounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
 // import { useBoardStore } from "@/stores/board";
-import { getPostDetail, updatePost, createPost } from "@/apis";
+import { getPostDetail, updatePost, createPost, getBoards } from "@/apis";
 
 const route = useRoute();
 const router = useRouter();
@@ -152,11 +152,11 @@ const isOpen = ref(false);
 const isEditMode = computed(() => !!route.params.postId);
 
 // 게시판 목록
-const boards = [
-  { id: 0, name: "게시판을 선택해주세요." },
-  { id: 1, name: "자유게시판" },
-  { id: 2, name: "익명게시판" },
-];
+const boards = ref([
+  // { id: 0, name: "게시판을 선택해주세요." },
+  // { id: 1, name: "자유게시판" },
+  // { id: 2, name: "익명게시판" },
+]);
 
 // 폼 데이터
 const formData = ref({
@@ -167,8 +167,8 @@ const formData = ref({
 
 // 선택된 게시판 이름
 const selectedBoardName = computed(() => {
-  const board = boards.find((b) => b.id === formData.value.boardId);
-  return board?.name;
+  const board = boards.value.find((b) => b.boardId === formData.value.boardId);
+  return board?.boardName || "게시판을 선택해주세요";
 });
 
 // 드롭다운 토글
@@ -178,19 +178,41 @@ const toggleDropdown = () => {
 
 // 게시판 선택
 const selectBoard = (board) => {
-  formData.value.boardId = board.id;
+  formData.value.boardId = board.boardId;
   isOpen.value = false;
 };
 
+// 게시판 리스트 조회
+onMounted(async () => {
+  try {
+    const response = await getBoards(0);
+    // boards.value = response;
+    boards.value = Array.isArray(response) ? response : [];
+
+    // URL의 boardId 파라미터가 있다면 해당 게시판 자동 선택
+    if (route.params.boardId) {
+      const boardId = Number(route.params.boardId);
+      formData.value.boardId = boardId;
+    }
+    console.log("boards : ", boards);
+  } catch (error) {
+    console.error("게시판 리스트 조회 실패:", error);
+  }
+});
+
 // 수정 모드일 경우 데이터 로드
 onMounted(async () => {
+  // console.log("route.params.postId", route.params.postId);
   if (isEditMode.value) {
     try {
-      const post = await getPostDetail(route.params.postId);
+      const post = await getPostDetail(
+        route.params.boardId,
+        route.params.postId
+      );
       formData.value = {
-        boardId: post.boardId,
-        title: post.title,
-        content: post.content,
+        boardId: Number(route.params.boardId),
+        title: post.data.title,
+        content: post.data.content,
       };
     } catch (error) {
       console.error("게시글 로딩 실패:", error);
@@ -261,25 +283,31 @@ const handleSubmit = async () => {
   }
 
   try {
-    const formDataToSend = new FormData();
-    formDataToSend.append("title", formData.value.title);
-    formDataToSend.append("content", formData.value.content);
+    // 파일 업로드를 별도로 처리해야 함
+    const postData = {
+      title: formData.value.title,
+      content: formData.value.content,
+    };
 
-    // 파일 추가
-    attachedFiles.value.forEach((file) => {
-      formDataToSend.append("files", file);
-    });
+    // 파일 첨부는 별도 API 호출 필요
+    // const fileFormData = new FormData();
+    // attachedFiles.value.forEach((file) => {
+    //   fileFormData.append("files", file);
+    // });
 
     if (isEditMode.value) {
       await updatePost(
         formData.value.boardId,
         route.params.postId,
-        formDataToSend
+        postData,
+        attachedFiles.value
       );
     } else {
-      await createPost(formData.value.boardId, formDataToSend);
+      await createPost(formData.value.boardId, postData, attachedFiles.value);
     }
-    router.push("/board");
+    router.push(`/board/${formData.value.boardId}`);
+    // 성공 시 해당 게시판 목록으로 이동
+    // router.push(`/`);
   } catch (error) {
     console.error("게시글 처리 실패:", error);
     alert("게시글 처리에 실패했습니다. 다시 시도해주세요.");
@@ -326,10 +354,6 @@ onUnmounted(() => {
 .board-list li {
   transition: padding 0.2s ease;
 }
-
-/* .board-list li:hover {
-  padding-left: 1rem;
-} */
 
 .board-list::-webkit-scrollbar-track {
   background: #f1f1f1;

@@ -125,7 +125,7 @@ const signin = async () => {
 
   try {
     const response = await postSignIn(signinData.value);
-    const token = response.headers["access-token"];
+    // const token = response.headers["access-token"];
 
     if (response.data.success) {
       const token = response.headers["access-token"];
@@ -211,9 +211,9 @@ const signin = async () => {
 //   }
 // };
 
-// const setUserDataToSession = (userData) => {
-//   sessionStorage.setItem("userData", JSON.stringify(userData));
-// };
+const setUserDataToSession = (userData) => {
+  sessionStorage.setItem("userData", JSON.stringify(userData));
+};
 </script>
 
 <style scoped>

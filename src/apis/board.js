@@ -1,5 +1,6 @@
 // apis/board.js
 import axios from "axios";
+import { useAuthStore } from "@/stores/auth";
 
 const boardUrl = axios.create({
   baseURL: import.meta.env.VITE_MAIN_API_SERVER_URL,
@@ -7,6 +8,24 @@ const boardUrl = axios.create({
     "Content-Type": "application/json",
   },
 });
+
+// 토큰 인터셉터 추가
+boardUrl.interceptors.request.use(
+  (config) => {
+    const authStore = useAuthStore();
+    const token = authStore.token;
+
+    if (token) {
+      config.headers["access-token"] = token;
+      console.log("요청 헤더:", config.headers); // 헤더 확인용 로그
+    }
+
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
 
 // 에러 처리 헬퍼 함수
 const handleApiError = (error, operation) => {
@@ -23,11 +42,43 @@ const handleApiError = (error, operation) => {
   throw error;
 };
 
-// API 함수들
-export const getPostsByBoardId = async (boardId) => {
+// ================
+// 게시판/게시글 관련
+// ================
+// 게시판 목록 조회
+// api/v1/boards
+export const getBoards = async () => {
+  try {
+    const response = await boardUrl.get(`/boards`);
+    console.log("게시판 리스트 조회 성공");
+    console.log("response.data.data : ", response.data.data);
+
+    return response.data.data;
+  } catch (error) {
+    return handleApiError(error, "게시글 말고 게시판 리스트 조회");
+  }
+};
+
+// 게시글 목록 전체 조회
+// api/v1/boards/{boardId}/posts/allposts
+export const getPostsAll = async (boardId) => {
   try {
     const response = await boardUrl.get(
-      `${import.meta.env.VITE_BOARDS}${boardId}/posts`
+      `${import.meta.env.VITE_BOARDS}${boardId}/posts/allposts`
+    );
+    return response.data;
+  } catch (error) {
+    return handleApiError(error, "게시글 목록 전체 조회");
+  }
+};
+
+// 특정 게시판 게시글 목록 조회
+// api/v1/boards/{boardId}/posts?page=1&size=15
+export const getPostsByBoardId = async (boardId, postsPerPage, currentPage) => {
+  try {
+    console.log(postsPerPage);
+    const response = await boardUrl.get(
+      `${import.meta.env.VITE_BOARDS}${boardId}/posts?page=${currentPage}&size=${postsPerPage}`
     );
     return response.data;
   } catch (error) {
@@ -35,32 +86,74 @@ export const getPostsByBoardId = async (boardId) => {
   }
 };
 
+// 게시글 상세 조회
+// api/v1/boards/{boardId}/posts/{postId}
 export const getPostDetail = async (boardId, postId) => {
   try {
     const response = await boardUrl.get(
       `${import.meta.env.VITE_BOARDS}${boardId}/posts/${postId}`
     );
+    console.log("getPostDetail response.data : ", response.data);
     return response.data;
   } catch (error) {
     return handleApiError(error, "게시글 상세 조회");
   }
 };
 
-export const createPost = async (boardId, postData) => {
+// 게시글 작성
+// api/v1/boards/{boardId}/posts
+export const createPost = async (boardId, postData, images) => {
   try {
+    // 이미지 파일 multipart 방식 포함
+    // const formData = new FormData();
+    // formData.append("title", postData.title);
+    // formData.append("content", postData.content);
+
+    // 이미지 파일들 추가
+    // if (images && images.length > 0) {
+    //   images.forEach((image) => {
+    //     formData.append("images", image);
+    //   });
+    // }
+
+    // console.log("전송되는 데이터:", {
+    //   title: postData.title,
+    //   content: postData.content,
+    //   imagesCount: images?.length || 0,
+    // });
+
+    // const response = await boardUrl.post(
+    //   `${import.meta.env.VITE_BOARDS}${boardId}/posts`,
+    //   formData,
+    //   {
+    //     headers: {
+    //       "Content-Type": "multipart/form-data",
+    //     },
+    //   }
+    // );
+
     const response = await boardUrl.post(
       `${import.meta.env.VITE_BOARDS}${boardId}/posts`,
       postData
+      // config
     );
+    console.log("게시글 등록 성공");
+    console.log("postData", postData);
+    console.log("boardId", boardId);
     return response.data;
   } catch (error) {
+    if (error.response) {
+      console.error("서버 응답:", error.response.data);
+    }
     return handleApiError(error, "게시글 등록");
   }
 };
 
+// 게시글 수정
+// api/v1/boards/{boardId}/posts/{postId}
 export const updatePost = async (boardId, postId, postData) => {
   try {
-    const response = await boardUrl.put(
+    const response = await boardUrl.patch(
       `${import.meta.env.VITE_BOARDS}${boardId}/posts/${postId}`,
       postData
     );
@@ -70,6 +163,8 @@ export const updatePost = async (boardId, postId, postData) => {
   }
 };
 
+// 게시글 삭제
+// api/v1/boards/{boardId}/posts/{postId}
 export const deletePost = async (boardId, postId) => {
   try {
     const response = await boardUrl.delete(
@@ -82,14 +177,34 @@ export const deletePost = async (boardId, postId) => {
 };
 
 // ================
+// 좋아요 추천
+// ================
+// api/v1/boards/{boardId}/posts/{postId}/like
+export const togglePostLike = async (boardId, postId, isCurrentlyLiked) => {
+  try {
+    // 현재 좋아요 상태에 따라 다른 엔드포인트 사용
+    console.log("isCurrentlyLiked : ", isCurrentlyLiked);
+    const endpoint = isCurrentlyLiked ? "unlike" : "like";
+
+    const response = await boardUrl.post(
+      `${import.meta.env.VITE_BOARDS}${boardId}/posts/${postId}/${endpoint}`
+    );
+    return response.data;
+  } catch (error) {
+    return handleApiError(error, "좋아요 추천 수 toggle");
+  }
+};
+
+// ================
 // 댓글 관련
 // ================
 
 // 댓글 목록 조회
+// api/v1/boards/{boardId}/posts/{postId}/comments
 export const getComments = async (boardId, postId) => {
   try {
     const response = await boardUrl.get(
-      `${import.meta.env.VITE_BOARDS}${boardId}/posts/${postId}/comments`
+      `/boards/${boardId}/posts/${postId}/comments` // VITE_BOARDS 환경변수 제거
     );
     return response.data;
   } catch (error) {
@@ -101,12 +216,25 @@ export const getComments = async (boardId, postId) => {
 export const createComment = async (boardId, postId, content) => {
   try {
     const response = await boardUrl.post(
-      `${import.meta.env.VITE_BOARDS}${boardId}/posts/${postId}/comments`,
+      `/boards/${boardId}/posts/${postId}/comments`, // VITE_BOARDS 환경변수 사용하지 않음
       { content }
     );
     return response.data;
   } catch (error) {
     return handleApiError(error, "댓글 작성");
+  }
+};
+
+// 댓글 삭제
+// api/v1/boards/${boardId}/posts/${postId}/comments/{commentId}
+export const deleteComment = async (boardId, postId, commentId) => {
+  try {
+    const response = await boardUrl.delete(
+      `${import.meta.env.VITE_BOARDS}${boardId}/posts/${postId}/comments/${commentId}`
+    );
+    return response.data;
+  } catch (error) {
+    return handleApiError(error, "댓글 삭제");
   }
 };
 

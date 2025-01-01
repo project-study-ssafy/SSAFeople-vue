@@ -4,7 +4,7 @@ import { MainFooter, MainTopbar } from "@/components";
 
 <template>
   <div
-    class="min-w-[1280px] grid grid-cols-[1fr_minmax(1148px,_1280px)_1fr] gap-x-3 bg-white"
+    class="min-w-[1280px] grid grid-cols-[1fr_minmax(1148px,_1280px)_1fr] gap-x-3 bg-white relative"
   >
     <MainTopbar class="col-span-3" />
     <RouterView />
