@@ -13,9 +13,13 @@ export default defineConfig({
   },
   server: {
     port: 8080,
-    // proxy: {
-    //     '/': 'http://localhost:8080'
-    // }
+    proxy: {
+      "/api": {
+        target: "https://ssafeople.com",
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, ""),
+      },
+    },
   },
   html: {
     lang: "ko",
