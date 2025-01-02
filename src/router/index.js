@@ -39,6 +39,83 @@ const router = createRouter({
                   next();
                 }
               },
+              children: [
+                {
+                  path: "",
+                  component: () =>
+                    import(
+                      "@/components/MainView/MainContent/MainContentViews/Community/CommunityBoardList.vue"
+                    ),
+                },
+                // {
+                //   path: "",
+                //   component: () =>
+                //     import(
+                //       "@/components/MainView/MainContent/MainContentViews/Boards/TestBoard.vue"
+                //     ),
+                // },
+
+                {
+                  path: "chat/:id",
+                  name: "Chat",
+                  props: true, // URL 파라미터를 props로 전달
+                  component: () =>
+                    import(
+                      "@/components/MainView/MainContent/MainContentViews/Community/CommunityChat.vue"
+                    ),
+                },
+
+                {
+                  path: "board/:boardId",
+                  name: "BoardList",
+                  component: () =>
+                    import(
+                      "@/components/MainView/MainContent/MainContentViews/Community/CommunityBoardList.vue"
+                    ),
+                  props: true, // URL 파라미터를 props로 전달
+                },
+                {
+                  path: "board/:boardId/:postId",
+                  name: "BoardDetail",
+                  component: () =>
+                    import(
+                      "@/components/MainView/MainContent/MainContentViews/Community/CommunityBoardDetail.vue"
+                    ),
+                  props: true, // URL의 파라미터를 props로 전달
+                },
+                {
+                  path: "board/:boardId/write",
+                  name: "PostForm",
+                  component: () =>
+                    import(
+                      "@/components/MainView/MainContent/MainContentViews/Community/CommunityBoardPostForm.vue"
+                    ),
+                  props: true,
+                },
+                {
+                  path: "board/edit/:boardId/:postId",
+                  name: "PostEdit",
+                  component: () =>
+                    import(
+                      "@/components/MainView/MainContent/MainContentViews/Community/CommunityBoardPostForm.vue"
+                    ),
+                  props: true,
+                },
+                // {
+                //   path: "free",
+                //   component: () => import("@/views/Ssammunity/FreeBoardView.vue"),
+                // },
+                // {
+                //   path: "greeting",
+                //   component: () =>
+                //     import("@/views/Ssammunity/GreetingBoardView.vue"),
+                // },
+                // {
+                //   path: "anonymous",
+                //   component: () =>
+                //     import("@/views/Ssammunity/AnonymousBoardView.vue"),
+                // },
+              ],
             },
             {
               path: "/info",
@@ -107,7 +184,9 @@ const router = createRouter({
               path: "board",
               name: "UserBoard",
               component: () =>
-                import("@/components/MainView/MainUser/UserBoard.vue"),
+                import(
+                  "@/components/MainView/MainContent/MainContentViews/Community/UserBoard.vue"
+                ),
             },
             {
               path: "setting-userinfo",

@@ -9,7 +9,8 @@
     >
       <span
         class="inline-block overflow-hidden whitespace-nowrap text-ellipsis max-w-[400px]"
-        >{{ index + 1 }}. {{ context }}</span
+        ><em class="inline-block w-2 font-[600] mr-2">{{ index + 1 }}</em>
+        {{ context }}</span
       >
     </RouterLink>
   </div>
@@ -22,3 +23,4 @@ const props = defineProps({
   contexts: Array,
 });
 </script>
+<style></style>

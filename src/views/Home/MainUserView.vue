@@ -16,9 +16,17 @@
             <AppHeader
               :type="4"
               :text="userinfo.nickname + ' (' + userinfo.username + ')'"
-              class="font-semibold"
+              class="font-semibold mb-2"
             />
-            <AppHeader :type="6" :text="userinfo.email" class="font-semibold" />
+            <!-- <AppHeader
+              :type="6"
+              :text="userinfo.email"
+              class="w-full text-[10px] text-gray-600 mb-2 bg-gray-100 px-2 py-1 rounded-[5px]"
+            /> -->
+            <span
+              class="w-full text-[14px] text-gray-600 mb-2 bg-gray-100 px-2 py-1 rounded-[5px]"
+              >{{ userinfo.email }}</span
+            >
             <p>{{ userinfo.biography }}</p>
           </div>
         </div>
@@ -122,9 +130,12 @@ const userinfo = ref({
 
 onMounted(async () => {
   try {
-    const id = route.params.id;
-    const userDataResponse = await getUserData(id);
-    userinfo.value = userDataResponse.data;
+    if (checkAdministrator()) {
+      userinfo.value = userStore.userData;
+    } else {
+      const userDataResponse = await getUserData(route.params.id);
+      userinfo.value = userDataResponse.data;
+    }
   } catch (error) {
     console.log(error);
     router.push({ name: "NotFound" });
@@ -140,10 +151,16 @@ const checkAdministrator = () => {
 
 const updateReadme = (readme) => {
   userinfo.value.readme = readme;
+  userStore.setUserData(userinfo.value);
+  sessionStorage.setItem("userData", JSON.stringify(userinfo.value));
+  console.log(userStore.userData);
 };
 
 const updateUserInfo = (data) => {
   userinfo.value = data;
+  userStore.setUserData(userinfo.value);
+  sessionStorage.setItem("userData", JSON.stringify(userinfo.value));
+  console.log(userStore.userData);
 };
 </script>
 <style scoped></style>

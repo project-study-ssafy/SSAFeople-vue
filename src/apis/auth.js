@@ -28,7 +28,7 @@ export const postSignIn = async (data) => {
   try {
     const response = await apiClient.post(
       import.meta.env.VITE_USERS + import.meta.env.VITE_SIGNIN,
-      data,
+      data
     );
     return response;
   } catch (error) {
@@ -57,7 +57,7 @@ export const getUserData = async (id) => {
           headers: {
             "access-token": token, // 헤더에 토큰 추가
           },
-        },
+        }
       );
       return response.data;
     }
@@ -73,7 +73,7 @@ export const postEmailVerificationCode = async (data) => {
     const response = await apiClient.post(
       import.meta.env.VITE_USERS +
         import.meta.env.VITE_SEND_EMAIL_VERIFICATION_CODE,
-      data,
+      data
     );
     return response.data;
   } catch (error) {
@@ -87,7 +87,7 @@ export const postEmailVerification = async (data) => {
   try {
     const response = await apiClient.post(
       import.meta.env.VITE_USERS + import.meta.env.VITE_EMAIL_VERIFY,
-      data,
+      data
     );
     return response.data;
   } catch (error) {
@@ -109,7 +109,7 @@ export const modifyReadme = async (data) => {
         headers: {
           "access-token": token, // 헤더에 토큰 추가
         },
-      },
+      }
     );
     return response.data;
   } catch (error) {
@@ -165,6 +165,30 @@ export const postEmailVerificationCodeForPassword = async (data) => {
       import.meta.env.VITE_USERS +
         import.meta.env.VITE_SEND_EMAIL_VERIFICATION_CODE_PASSWORD,
       data,
+    );
+    return response.data;
+  } catch (error) {
+    console.log("API 요청 에러:", error);
+    throw error;
+  }
+};
+
+// 익명채팅 닉네임 변경
+export const postChattingNickname = async (nickname) => {
+  try {
+    const authStore = useAuthStore();
+    const token = authStore.token;
+
+    const response = await apiClient.post(
+      import.meta.env.VITE_USERS + import.meta.env.VITE_CHATTING_NICKNAME,
+      {
+        nickname: nickname,
+      },
+      {
+        headers: {
+          "access-token": token, // 헤더에 토큰 추가
+        },
+      },
     );
     return response.data;
   } catch (error) {

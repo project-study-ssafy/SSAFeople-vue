@@ -235,6 +235,8 @@ const register = async () => {
     return; // 유효성 검사에서 오류가 있을 경우 등록 중단
   }
 
+  // status.value.emailVerify = true; // 이 줄을 추가하여 이메일 인증 강제 통과
+
   // 이메일 인증 확인 후 회원가입 진행
   if (status.value.emailVerify) {
     try {
@@ -273,7 +275,7 @@ const register = async () => {
   }
 };
 
-const emailValidation = () => {
+const emailValidation = async () => {
   // 이메일 유효성 검사
   errors.value.email = "";
   // 이메일 형식 검사
@@ -285,15 +287,15 @@ const emailValidation = () => {
 
   // 이메일 검증코드 받는 요청 들어가야 함
   try {
-    const response = postEmailVerificationCode(
-      JSON.stringify({
-        email: userData.value.email,
-      }),
-    );
-    console.log(response);
+    await postEmailVerificationCode({
+      email: userData.value.email,
+    });
   } catch (error) {
-    console.log(error);
-    return false;
+    Swal.fire({
+      icon: "error",
+      title: "이메일 전송 실패",
+      text: error.response?.data?.message || "이메일 전송에 실패했습니다.",
+    });
   }
 
   // CSS 스타일 추가
@@ -370,6 +372,105 @@ const emailValidation = () => {
     }
   });
 };
+
+// 기존
+// const emailValidation = () => {
+//   // 이메일 유효성 검사
+//   errors.value.email = "";
+//   // 이메일 형식 검사
+//   const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+//   if (!emailPattern.test(userData.value.email)) {
+//     errors.value.email = "유효한 이메일 주소를 입력하세요.";
+//     return;
+//   }
+
+//   // 이메일 검증코드 받는 요청 들어가야 함
+//   try {
+//     const response = postEmailVerificationCode(
+//       JSON.stringify({
+//         email: userData.value.email,
+//       })
+//     );
+//     console.log(response);
+//   } catch (error) {
+//     console.log(error);
+//     return false;
+//   }
+
+//   // CSS 스타일 추가
+//   const style = document.createElement("style");
+//   style.innerHTML = `
+//     .swal2-title {
+//       font-size: 24px; /* 원하는 크기로 설정 */
+//     }
+//     .swal2-confirm {
+//       background-color: #3396F4;
+//     }
+//   `;
+//   document.head.appendChild(style);
+//   let timerInterval;
+//   const totalTime = 5 * 60 * 1000; // 5분을 밀리초로 변환
+//   let remainingTime = totalTime;
+
+//   Swal.fire({
+//     title: "이메일로 전송된 인증 코드를 입력해주세요",
+//     input: "text",
+//     inputAttributes: {
+//       autocapitalize: "off",
+//     },
+//     html: "남은 시간: <b></b>",
+//     showCancelButton: true,
+//     confirmButtonText: "인증",
+//     didOpen: () => {
+//       const timer = Swal.getPopup().querySelector("b");
+//       timerInterval = setInterval(() => {
+//         remainingTime -= 1000; // 1초 감소
+//         const minutes = Math.floor(remainingTime / 60000);
+//         const seconds = Math.floor((remainingTime % 60000) / 1000);
+//         timer.textContent = `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+
+//         if (remainingTime <= 0) {
+//           clearInterval(timerInterval);
+//           Swal.close();
+//         }
+//       }, 1000);
+//     },
+//     willClose: () => {
+//       clearInterval(timerInterval);
+//     },
+//     preConfirm: async (inputCode) => {
+//       if (!inputCode) {
+//         Swal.showValidationMessage("코드를 입력해주세요");
+//         return false;
+//       }
+//       try {
+//         const response = await postEmailVerification({
+//           email: userData.value.email,
+//           code: inputCode,
+//         });
+//         return response.data;
+//       } catch (error) {
+//         if (error.response) {
+//           Swal.showValidationMessage(`${JSON.stringify(error.response.data)}`);
+//         } else {
+//           Swal.showValidationMessage(`Request failed: ${error.message}`);
+//         }
+//         return false;
+//       }
+//     },
+//     allowOutsideClick: () => !Swal.isLoading(),
+//   }).then((result) => {
+//     if (result.isConfirmed) {
+//       Swal.fire({
+//         icon: "success",
+//         title: "인증 완료",
+//         showConfirmButton: false,
+//         timer: 1500,
+//       });
+//       status.value.emailVerify = true;
+//     }
+//   });
+// };
 </script>
 
 <style scoped>

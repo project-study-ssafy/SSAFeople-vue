@@ -109,7 +109,6 @@ const authStore = useAuthStore();
 const userStore = useUserStore();
 
 const signin = async () => {
-  // 유효성 검사
   if (validation()) {
     return;
   }
@@ -126,6 +125,7 @@ const signin = async () => {
 
   try {
     const response = await postSignIn(signinData.value);
+    // const token = response.headers["access-token"];
 
     if (response.data.success) {
       const token = response.headers["access-token"];
@@ -174,6 +174,42 @@ const signin = async () => {
     console.log(error);
   }
 };
+
+// 기존
+// const signin = async () => {
+//   // 유효성 검사
+//   if (validation()) {
+//     return;
+//   }
+
+//   try {
+//     const response = await postSignIn(signinData.value);
+
+//     if (response.data.success) {
+//       const token = response.headers["access-token"];
+//       if (token) {
+//         authStore.setToken(token);
+//         signinData.value = {
+//           email: "",
+//           password: "",
+//         };
+//         console.log("로그인 성공. 토큰이 쿠키에 저장되었습니다.");
+
+//         try {
+//           const userDataResponse = await getUserData();
+//           setUserDataToSession(userDataResponse.data);
+//           router.push("/");
+//         } catch (error) {
+//           console.log(error);
+//         }
+//       } else {
+//         console.warn("로그인 성공하였으나 토큰이 없습니다.");
+//       }
+//     }
+//   } catch (error) {
+//     console.log(error);
+//   }
+// };
 
 const setUserDataToSession = (userData) => {
   sessionStorage.setItem("userData", JSON.stringify(userData));

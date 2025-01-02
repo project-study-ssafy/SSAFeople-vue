@@ -14,3 +14,6 @@ app.use(router);
 app.use(VueCookies, { expireTimes: "10h", secure: true });
 
 app.mount("#app");
+
+import vClickOutside from "click-outside-vue3";
+app.use(vClickOutside);

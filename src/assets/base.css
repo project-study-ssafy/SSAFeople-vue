@@ -1,3 +1,18 @@
+/* CUSTOM color var For SAFFEOPLE */
+:root {
+  --ssafy-blue: #3396f4;
+  --ssafy-blue-strong: #1d88ec;
+  --ssafy-banana: #ffe651;
+  --ssafy-berry: #f14a67;
+
+  --ssafy-bg-b: #424242;
+  --ssafy-bg-w: #f5f5f5;
+
+  --txt-basic: #232323;
+  --txt-basic45: #454545;
+  --txt-basic7: #777;
+  --txt-basic9: #999;
+}
 /* color palette from <https://github.com/vuejs/theme> */
 :root {
   --vt-c-white: #ffffff;

@@ -25,8 +25,7 @@
           <img :src="Magnifier" alt="검색" />
         </button>
       </div>
-      <!-- 메세지 알림 -->
-      <MessageAlert ref="messageAlertRef" />
+      <!-- <BoardAlert ref="messageAlertRef" /> -->
     </div>
     <div class="col-span-1"></div>
   </div>
@@ -36,8 +35,8 @@
 import { ref, onMounted, onUnmounted } from "vue";
 import LogoImage from "@/assets/logo.svg";
 import Magnifier from "@/assets/magnifier.svg";
-import MessageAlert from "@/components/Presets/MessageAlert.vue";
-
+// import BoardAlert from "@/components/Presets/BoardAlert.vue";
+// import { BoardAlert } from "@/components";
 const messageAlertRef = ref(null);
 
 // 전역 클릭 이벤트 핸들러
@@ -64,6 +63,25 @@ onMounted(() => {
 
 onUnmounted(() => {
   document.removeEventListener("click", handleGlobalClick);
+});
+</script>
+
+<script>
+let window_scrolling;
+
+window.addEventListener("scroll", () => {
+  if (!window_scrolling) {
+    console.log("start wheeling!");
+    document.documentElement.classList.remove("scroll-hidden");
+  }
+
+  // 일정시간 뒤에 스크롤 동작 멈춤을 감지
+  clearTimeout(window_scrolling);
+  window_scrolling = setTimeout(() => {
+    console.log("stop wheeling!");
+    window_scrolling = undefined;
+    document.documentElement.classList.add("scroll-hidden");
+  }, 400);
 });
 </script>
 
