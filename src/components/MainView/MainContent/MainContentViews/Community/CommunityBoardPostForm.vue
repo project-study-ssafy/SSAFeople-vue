@@ -305,7 +305,7 @@ const handleSubmit = async () => {
     } else {
       await createPost(formData.value.boardId, postData, attachedFiles.value);
     }
-    router.push(`/board/${formData.value.boardId}`);
+    router.push(`/board/board/${formData.value.boardId}`);
     // 성공 시 해당 게시판 목록으로 이동
     // router.push(`/`);
   } catch (error) {
