@@ -137,7 +137,7 @@
       </div>
 
       <RouterLink
-        :to="`/board/${boardId}`"
+        :to="`/board/board/${boardId}`"
         class="px-5 py-2 border-solid border-[1px] border-gray-200 text-gray-700 rounded hover:bg-gray-200 transition-colors"
       >
         목록

@@ -6,10 +6,7 @@ export { default as MainTopbar } from "./MainTopbar.vue";
 
 // MainView component exports
 export { default as MainContent } from "../views/Home/MainContent.vue";
-// export { default as AdditionalContent } from "./MainView/AdditionalContent.vue";
-
-// MainUserView component exports
-// export { default as UserModify } from "./MainUser/UserModifyReadme.vue"
+export { default as AdditionalContent } from "./MainView/AdditionalContent.vue";
 
 // SideContent component exports
 export { default as SideContent } from "./MainView/MainContent/SideContent.vue";

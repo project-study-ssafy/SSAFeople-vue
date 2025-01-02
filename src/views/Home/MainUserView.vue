@@ -1,9 +1,5 @@
 <template>
-  <MainHeader class="col-span-3" />
-  <MainNavigation class="col-span-3" />
-  <div
-    class="col-span-3 grid grid-cols-[1fr_minmax(1148px,_1280px)_1fr] bg-white"
-  >
+  <div class="grid grid-cols-[1fr_minmax(1148px,_1280px)_1fr] bg-white">
     <div class="col-span-1"></div>
     <div class="col-span-1 grid grid-cols-5 gap-5 my-5">
       <div class="col-span-1 space-y-5">
@@ -19,10 +15,18 @@
           <div class="text-center">
             <AppHeader
               :type="4"
-              :text="userinfo.username"
-              class="font-semibold"
+              :text="userinfo.nickname + ' (' + userinfo.username + ')'"
+              class="font-semibold mb-2"
             />
-            <AppHeader :type="6" :text="userinfo.email" class="font-semibold" />
+            <!-- <AppHeader
+              :type="6"
+              :text="userinfo.email"
+              class="w-full text-[10px] text-gray-600 mb-2 bg-gray-100 px-2 py-1 rounded-[5px]"
+            /> -->
+            <span
+              class="w-full text-[14px] text-gray-600 mb-2 bg-gray-100 px-2 py-1 rounded-[5px]"
+              >{{ userinfo.email }}</span
+            >
             <p>{{ userinfo.biography }}</p>
           </div>
         </div>
@@ -64,7 +68,10 @@
             <hr />
             <!-- 비밀번호 변경 추가해야 함 -->
             <RouterLink
-              :to="{ name: 'UserInfoSetting', params: { id: route.params.id } }"
+              :to="{
+                name: 'UserPasswordSetting',
+                params: { id: route.params.id },
+              }"
               class="w-full p-2 flex justify-between"
             >
               <span class="font-semibold">비밀번호 수정</span>
@@ -74,17 +81,39 @@
         </div>
       </div>
       <RouterView
+        v-slot="{ Component }"
         class="col-span-4 bg-white rounded-xl border border-gray-300 p-5 min-h-[450px]"
         :user-info="userinfo"
-      />
+        @update-readme="updateReadme"
+        @update-user-info="updateUserInfo"
+      >
+        <Transition
+          enter-active-class="transition-opacity duration-200 ease-in-out"
+          enter-from-class="opacity-0"
+          enter-to-class="opacity-100"
+          leave-active-class="transition-opacity duration-200 ease-in-out"
+          leave-from-class="opacity-100"
+          leave-to-class="opacity-0"
+          mode="out-in"
+        >
+          <!-- <RouterView /> -->
+          <component :is="Component" />
+        </Transition>
+      </RouterView>
+      <!-- <RouterView
+        class="col-span-4 bg-white rounded-xl border border-gray-300 p-5 min-h-[450px]"
+        :user-info="userinfo"
+        @update-readme="updateReadme"
+        @update-user-info="updateUserInfo"
+      /> -->
     </div>
     <div class="col-span-1"></div>
   </div>
 </template>
 <script setup>
 import { onMounted, ref } from "vue";
-import { RouterView, useRoute, useRouter } from "vue-router";
-import { MainHeader, MainNavigation, AppHeader } from "@/components";
+import { useRoute, useRouter } from "vue-router";
+import { AppHeader } from "@/components";
 import { useUserStore } from "@/stores/auth";
 import { getUserData } from "@/apis";
 
@@ -94,16 +123,19 @@ const router = useRouter();
 const userStore = useUserStore();
 const userinfo = ref({
   username: "",
+  nickname: "",
   email: "로딩 중...",
   biography: "",
 });
 
 onMounted(async () => {
   try {
-    const id = route.params.id;
-    const userDataResponse = await getUserData(id);
-    console.log(userDataResponse.data);
-    userinfo.value = userDataResponse.data;
+    if (checkAdministrator()) {
+      userinfo.value = userStore.userData;
+    } else {
+      const userDataResponse = await getUserData(route.params.id);
+      userinfo.value = userDataResponse.data;
+    }
   } catch (error) {
     console.log(error);
     router.push({ name: "NotFound" });
@@ -115,6 +147,20 @@ const checkAdministrator = () => {
     return true;
   }
   return false;
+};
+
+const updateReadme = (readme) => {
+  userinfo.value.readme = readme;
+  userStore.setUserData(userinfo.value);
+  sessionStorage.setItem("userData", JSON.stringify(userinfo.value));
+  console.log(userStore.userData);
+};
+
+const updateUserInfo = (data) => {
+  userinfo.value = data;
+  userStore.setUserData(userinfo.value);
+  sessionStorage.setItem("userData", JSON.stringify(userinfo.value));
+  console.log(userStore.userData);
 };
 </script>
 <style scoped></style>

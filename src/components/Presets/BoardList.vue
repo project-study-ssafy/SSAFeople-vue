@@ -12,7 +12,7 @@
         </p>
       </div>
       <RouterLink
-        :to="`/board/${boardId}/write`"
+        :to="`${boardId}/write`"
         class="px-5 py-2 bg-[var(--ssafy-blue)] text-white font-[600] rounded-lg hover:bg-[var(--ssafy-blue-strong)] transition-colors"
       >
         글쓰기

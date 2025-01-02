@@ -38,3 +38,5 @@ const myContexts = [
 ];
 </script>
 <style scoped></style>
+
+<!-- 메인페이지 구조 style 변경 및 요소 추가 -->

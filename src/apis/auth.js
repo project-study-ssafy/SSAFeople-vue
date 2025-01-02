@@ -117,3 +117,82 @@ export const modifyReadme = async (data) => {
     throw error;
   }
 };
+
+// 회원정보 수정
+export const modifyUserData = async (data) => {
+  try {
+    const authStore = useAuthStore();
+    const token = authStore.token;
+
+    const response = await apiClient.patch(import.meta.env.VITE_USERS, data, {
+      headers: {
+        "access-token": token, // 헤더에 토큰 추가
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.log("API 요청 에러:", error);
+    throw error;
+  }
+};
+
+// 비밀번호 수정
+export const modifyUserPassword = async (data) => {
+  try {
+    const authStore = useAuthStore();
+    const token = authStore.token;
+
+    const response = await apiClient.post(
+      import.meta.env.VITE_USERS + import.meta.env.VITE_MODIFY_PASSWORD,
+      data,
+      {
+        headers: {
+          "access-token": token, // 헤더에 토큰 추가
+        },
+      },
+    );
+    return response.data;
+  } catch (error) {
+    console.log("API 요청 에러:", error);
+    throw error;
+  }
+};
+
+// 비밀번호 수정 이메일 인증 요청
+export const postEmailVerificationCodeForPassword = async (data) => {
+  try {
+    const response = await apiClient.post(
+      import.meta.env.VITE_USERS +
+        import.meta.env.VITE_SEND_EMAIL_VERIFICATION_CODE_PASSWORD,
+      data,
+    );
+    return response.data;
+  } catch (error) {
+    console.log("API 요청 에러:", error);
+    throw error;
+  }
+};
+
+// 익명채팅 닉네임 변경
+export const postChattingNickname = async (nickname) => {
+  try {
+    const authStore = useAuthStore();
+    const token = authStore.token;
+
+    const response = await apiClient.post(
+      import.meta.env.VITE_USERS + import.meta.env.VITE_CHATTING_NICKNAME,
+      {
+        nickname: nickname,
+      },
+      {
+        headers: {
+          "access-token": token, // 헤더에 토큰 추가
+        },
+      },
+    );
+    return response.data;
+  } catch (error) {
+    console.log("API 요청 에러:", error);
+    throw error;
+  }
+};
