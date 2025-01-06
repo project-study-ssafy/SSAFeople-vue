@@ -13,14 +13,27 @@ export default defineConfig({
   },
   server: {
     port: 8080,
-    // proxy: {
-    //     '/': 'http://localhost:8080'
-    // }
+    proxy: {
+      "/api": {
+        target: "https://ssafeople.com",
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, ""),
+      },
+    },
   },
   html: {
     lang: "ko",
   },
   define: {
     global: "window", // 브라우저 환경에서 global을 window로 매핑
+  },
+  build: {
+    minify: true,
+    terserOptions: {
+      compress: {
+        drop_console: true,
+        drop_debugger: true,
+      },
+    },
   },
 });

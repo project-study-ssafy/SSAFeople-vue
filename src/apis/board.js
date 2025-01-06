@@ -102,43 +102,21 @@ export const getPostDetail = async (boardId, postId) => {
 
 // 게시글 작성
 // api/v1/boards/{boardId}/posts
-export const createPost = async (boardId, postData, images) => {
+export const createPost = async (boardId, postFormData) => {
   try {
-    // 이미지 파일 multipart 방식 포함
-    // const formData = new FormData();
-    // formData.append("title", postData.title);
-    // formData.append("content", postData.content);
-
-    // 이미지 파일들 추가
-    // if (images && images.length > 0) {
-    //   images.forEach((image) => {
-    //     formData.append("images", image);
-    //   });
-    // }
-
-    // console.log("전송되는 데이터:", {
-    //   title: postData.title,
-    //   content: postData.content,
-    //   imagesCount: images?.length || 0,
-    // });
-
-    // const response = await boardUrl.post(
-    //   `${import.meta.env.VITE_BOARDS}${boardId}/posts`,
-    //   formData,
-    //   {
-    //     headers: {
-    //       "Content-Type": "multipart/form-data",
-    //     },
-    //   }
-    // );
-
     const response = await boardUrl.post(
       `${import.meta.env.VITE_BOARDS}${boardId}/posts`,
-      postData
-      // config
+      postFormData,
+      {
+        headers: {
+          // "Content-Type": "undefined ",
+          "Content-Type": "multipart/form-data",
+        },
+      }
     );
-    console.log("게시글 등록 성공");
-    console.log("postData", postData);
+
+    console.log("게시글 등록 성공 response.data : ");
+    console.log(response);
     console.log("boardId", boardId);
     return response.data;
   } catch (error) {
@@ -151,11 +129,32 @@ export const createPost = async (boardId, postData, images) => {
 
 // 게시글 수정
 // api/v1/boards/{boardId}/posts/{postId}
-export const updatePost = async (boardId, postId, postData) => {
+export const updatePost = async (boardId, postId, postFormData) => {
+  // FormData 내용 확인 방법 1: entries() 사용
+  console.log("=== FormData 내용 확인 ===");
+  for (const pair of postFormData.entries()) {
+    console.log(`${pair[0]}: `, pair[1]);
+
+    // File 객체인 경우 추가 정보 출력
+    if (pair[1] instanceof File) {
+      console.log(`File name: ${pair[1].name}`);
+      console.log(`File size: ${pair[1].size}`);
+      console.log(`File type: ${pair[1].type}`);
+    }
+  }
+
+  // FormData 내용 확인 방법 2: getAll() 사용
+  console.log("이미지 파일 목록:", postFormData.getAll("images"));
   try {
     const response = await boardUrl.patch(
       `${import.meta.env.VITE_BOARDS}${boardId}/posts/${postId}`,
-      postData
+      postFormData,
+      {
+        headers: {
+          // "Content-Type": "undefined ",
+          "Content-Type": "multipart/form-data",
+        },
+      }
     );
     return response.data;
   } catch (error) {

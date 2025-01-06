@@ -7,26 +7,25 @@
 
     <form @submit.prevent="handleSubmit">
       <!-- 게시판 선택 -->
-      <div class="board-selector mb-4 relative">
+      <div class="board-selector relative mb-4 w-[36%]">
         <div
           @click="toggleDropdown"
-          class="p-3 border-b rounded cursor-pointer flex justify-between items-center w-[36%]"
+          class="p-3 border-b rounded cursor-pointer flex justify-between items-center"
         >
-          <span class="">{{
-            selectedBoardName || "게시판을 선택해주세요"
-          }}</span>
+          <span>{{ selectedBoardName || "게시판을 선택해주세요" }}</span>
           <i :class="['bi', isOpen ? 'bi-chevron-up' : 'bi-chevron-down']"></i>
         </div>
 
-        <ul v-if="isOpen" class="board-list mt-1 border rounded">
+        <ul
+          v-if="isOpen"
+          class="absolute w-full bg-white border rounded z-10 max-h-[200px] overflow-y-auto shadow-md"
+        >
           <li
             v-for="board in boards"
             :key="board.boardId"
             @click="selectBoard(board)"
-            :class="[
-              'p-2 cursor-pointer hover:bg-gray-50 transition-all',
-              formData.boardId === board.boardId ? 'text-blue-500' : '',
-            ]"
+            class="p-2 cursor-pointer hover:bg-gray-50 transition-all"
+            :class="formData.boardId === board.boardId ? 'text-blue-500' : ''"
           >
             {{ board.boardName }}
           </li>
@@ -39,33 +38,31 @@
           v-model="formData.title"
           type="text"
           placeholder="제목을 입력해주세요"
-          class="w-full bg-[#f8f8f8] p-4 border rounded-[16px] focus:outline-none focus:border-blue-500"
+          class="w-full bg-gray-50 p-4 border rounded-[16px] focus:outline-none focus:border-blue-500"
         />
       </div>
 
-      <!-- 에디터 툴바 -->
-      <div class="">
-        <!-- 내용 입력 영역 -->
-        <textarea
-          v-model="formData.content"
-          rows="15"
-          placeholder="내용을 입력해주세요"
-          class="w-full p-4 border rounded-[16px] mb-4 focus:outline-none focus:border-blue-500 resize-none"
-        ></textarea>
-      </div>
+      <!-- 내용 입력 영역 -->
+      <textarea
+        v-model="formData.content"
+        rows="15"
+        placeholder="내용을 입력해주세요"
+        class="w-full p-4 border rounded-[16px] mb-4 focus:outline-none focus:border-blue-500 resize-none"
+      ></textarea>
 
       <!-- 첨부파일 영역 -->
       <div class="mb-4">
         <div class="flex items-center justify-between text-sm text-gray-600">
           <div class="flex items-center">
             <span
-              >{{ formatFileSize(fileSize) }} Bytes / {{ maxFileSize }} MB</span
+              >{{ attachedImages.length }} / {{ maxFileCount }} 개 (개당 최대
+              {{ maxFileSize }}MB)</span
             >
             <label
               for="file-upload"
               class="ml-2 px-2 py-1 border rounded hover:bg-gray-50 cursor-pointer"
             >
-              파일첨부
+              사진첨부
             </label>
             <input
               id="file-upload"
@@ -76,7 +73,7 @@
             />
           </div>
           <button
-            v-if="attachedFiles.length"
+            v-if="attachedImages.length"
             type="button"
             @click="clearFiles"
             class="text-gray-500 hover:text-gray-700"
@@ -85,34 +82,34 @@
           </button>
         </div>
 
-        <!-- 첨부된 파일 목록 -->
-        <ul
-          v-if="attachedFiles.length"
-          class="mt-2 space-y-1 border-solid border-[1px] border-gray-200 p-4 rounded"
-        >
-          <li
-            v-for="(file, index) in attachedFiles"
-            :key="index"
-            class="flex items-center justify-between text-sm bg-[#f2f2f2] px-4 py-2 rounded"
+        <!-- 첨부된 이미지 목록 -->
+        <div class="mt-4 space-y-4">
+          <ul
+            v-if="attachedImages.length"
+            class="flex flex-wrap gap-4 mt-4 p-4 border rounded-lg"
           >
-            <div class="flex items-center gap-2">
-              <span>{{ file.name }}</span>
-              <span class="text-gray-500"
-                >({{ formatFileSize(file.size) }})</span
-              >
-            </div>
-            <button
-              type="button"
-              @click="removeFile(index)"
-              class="text-gray-500 hover:text-red-500"
+            <li
+              v-for="(image, index) in attachedImages"
+              :key="index"
+              class="relative"
             >
-              <i class="bi bi-x"></i>
-            </button>
-          </li>
-        </ul>
-        <!-- <div v-if="attachedFiles.length" class="mt-1 text-sm text-gray-500">
-          총 {{ attachedFiles.length }}개 파일 ({{ formatFileSize(fileSize) }})
-        </div> -->
+              <div class="w-20 h-20 overflow-hidden rounded-lg">
+                <img
+                  :src="getImagePreview(image)"
+                  alt=""
+                  class="w-full h-full object-cover"
+                />
+              </div>
+              <button
+                type="button"
+                @click="removeImage(index)"
+                class="absolute -top-2 -right-2 p-1 bg-white rounded-full shadow"
+              >
+                <i class="bi bi-x"></i>
+              </button>
+            </li>
+          </ul>
+        </div>
       </div>
 
       <!-- 버튼 그룹 -->
@@ -138,12 +135,10 @@
 <script setup>
 import { ref, computed, onMounted, onUnmounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
-// import { useBoardStore } from "@/stores/board";
 import { getPostDetail, updatePost, createPost, getBoards } from "@/apis";
 
 const route = useRoute();
 const router = useRouter();
-// const boardStore = useBoardStore();
 
 // 드롭다운 상태
 const isOpen = ref(false);
@@ -152,17 +147,14 @@ const isOpen = ref(false);
 const isEditMode = computed(() => !!route.params.postId);
 
 // 게시판 목록
-const boards = ref([
-  // { id: 0, name: "게시판을 선택해주세요." },
-  // { id: 1, name: "자유게시판" },
-  // { id: 2, name: "익명게시판" },
-]);
+const boards = ref([]);
 
 // 폼 데이터
 const formData = ref({
   boardId: "",
   title: "",
   content: "",
+  images: [], // 이미지 배열 추가
 });
 
 // 선택된 게시판 이름
@@ -186,7 +178,6 @@ const selectBoard = (board) => {
 onMounted(async () => {
   try {
     const response = await getBoards(0);
-    // boards.value = response;
     boards.value = Array.isArray(response) ? response : [];
 
     // URL의 boardId 파라미터가 있다면 해당 게시판 자동 선택
@@ -202,7 +193,6 @@ onMounted(async () => {
 
 // 수정 모드일 경우 데이터 로드
 onMounted(async () => {
-  // console.log("route.params.postId", route.params.postId);
   if (isEditMode.value) {
     try {
       const post = await getPostDetail(
@@ -214,53 +204,123 @@ onMounted(async () => {
         title: post.data.title,
         content: post.data.content,
       };
+
+      // 기존 이미지 URL들을 File 객체로 변환
+      if (post.data.imageUrls?.length) {
+        const imageFiles = await Promise.all(
+          post.data.imageUrls.map((url) => urlToFile(url))
+        );
+        // null을 필터링하고 attachedImages에 저장
+        attachedImages.value = imageFiles.filter((file) => file !== null);
+
+        console.log(
+          "### onMounted attachedImages.value : ",
+          attachedImages.value
+        );
+        // 파일 크기 계산
+        // totalFileSize.value = attachedImages.value.reduce(
+        //   (acc, file) => acc + file.size / (1024 * 1024),
+        //   0
+        // );
+      }
     } catch (error) {
       console.error("게시글 로딩 실패:", error);
     }
   }
 });
 
-// ====================
-// 파일 첨부
-// ====================
+// =====================
+// 이미지 처리 관련
+// =====================
+const urlToFile = async (url) => {
+  try {
+    // const blob = await response.blob();
+    const response = await fetch(url, {
+      method: "GET",
+    });
+    console.log("urlToFile response : ", response);
+
+    const blob = await response.blob(url);
+    const fileName = url.split("/").pop();
+    console.log("#####blob : ", blob);
+    return new File([blob], fileName, { type: blob.type });
+  } catch (error) {
+    console.error("URL to File 변환 실패:", error);
+    return null;
+  }
+};
 
 // 파일 관련 상태 추가
-const attachedFiles = ref([]);
-const fileSize = ref(0);
-const maxFileSize = 10.0; // MB
-const maxFileCount = 5; // 최대 첨부 파일 수
+const attachedImages = ref([]);
+const fileSize = ref(0); // 전체 파일 크기
+
+const maxFileSize = 4.0;
+const maxFileCount = 10;
+const imageUrls = ref(new Map());
+
+const getImagePreview = (file) => {
+  if (!imageUrls.value.has(file)) {
+    const url = URL.createObjectURL(file);
+    imageUrls.value.set(file, url);
+  }
+  return imageUrls.value.get(file);
+};
 
 // 파일 변경 핸들러
 const handleFileChange = (event) => {
-  const newFiles = Array.from(event.target.files);
-  const totalFiles = [...attachedFiles.value, ...newFiles];
+  if (!event.target.files) return;
 
-  // 파일 개수 체크
-  if (totalFiles.length > maxFileCount) {
-    alert(`첨부파일은 최대 ${maxFileCount}개까지 가능합니다.`);
+  // 이미지 파일 필터링
+  const imageFiles = Array.from(event.target.files).filter((file) => {
+    // MIME 타입으로 이미지 파일 체크
+    const validImageTypes = [
+      "image/jpeg",
+      "image/png",
+      "image/gif",
+      "image/webp",
+    ];
+    return validImageTypes.includes(file.type);
+  });
+
+  // 이미지 파일이 없는 경우 알림
+  if (imageFiles.length === 0) {
+    alert("이미지 파일만 첨부할 수 있습니다. (jpg, png, gif, webp)");
     return;
   }
 
-  // 전체 파일 크기 계산
-  const totalSize = totalFiles.reduce((acc, file) => acc + file.size, 0);
-
-  // 최대 용량 체크
-  if (totalSize > maxFileSize * 1024 * 1024) {
-    alert(`첨부파일 전체 용량은 ${maxFileSize}MB를 초과할 수 없습니다.`);
+  // 파일 크기 체크
+  const oversizedFiles = imageFiles.filter(
+    (file) => file.size > maxFileSize * 1024 * 1024
+  );
+  if (oversizedFiles.length > 0) {
+    alert(`개별 이미지는 ${maxFileSize}MB를 초과할 수 없습니다.`);
     return;
   }
 
-  attachedFiles.value = totalFiles;
-  fileSize.value = totalSize;
+  // 전체 파일 개수 체크
+  if (attachedImages.value.length + imageFiles.length > maxFileCount) {
+    alert(`첨부 이미지는 최대 ${maxFileCount}개까지 가능합니다.`);
+    return;
+  }
+
+  attachedImages.value = [...attachedImages.value, ...imageFiles];
+  fileSize.value = calculateTotalSize(attachedImages.value);
 };
 
-// 개별 파일 삭제
-const removeFile = (index) => {
-  attachedFiles.value = attachedFiles.value.filter((_, i) => i !== index);
-  fileSize.value = attachedFiles.value.reduce(
-    (acc, file) => acc + file.size,
-    0
-  );
+const calculateTotalSize = (files) => {
+  if (!files.length) return 0;
+  return files.reduce((acc, file) => acc + (file?.size || 0), 0);
+};
+
+// 이미지 제거 시 URL 정리
+const removeImage = (index) => {
+  const file = attachedImages.value[index];
+  if (imageUrls.value.has(file)) {
+    URL.revokeObjectURL(imageUrls.value.get(file));
+    imageUrls.value.delete(file);
+  }
+  attachedImages.value.splice(index, 1);
+  updateTotalSize();
 };
 
 // 파일 크기 포맷팅
@@ -273,50 +333,89 @@ const formatFileSize = (bytes) => {
 
 // 폼 제출 시 파일도 함께 전송
 const handleSubmit = async () => {
-  if (
-    !formData.value.boardId ||
-    !formData.value.title ||
-    !formData.value.content
-  ) {
-    alert("모든 필드를 입력해주세요.");
+  // 폼 데이터 유효성 검증
+  if (!formData.value.boardId) {
+    alert("게시판을 선택해주세요.");
     return;
   }
 
+  const postFormData = new FormData();
+  postFormData.append("title", formData.value.title);
+  postFormData.append("content", formData.value.content);
+
+  // 이미지 파일 검증 및 추가
+  for (const image of attachedImages.value) {
+    if (image instanceof File) {
+      postFormData.append("images", image);
+    } else {
+      console.error("Invalid file object:", image);
+      alert("이미지 파일 처리 중 오류가 발생했습니다.");
+      return;
+    }
+  }
+
+  // FormData 내용 확인 (디버깅용)
+  // for (const pair of postFormData.entries()) {
+  //   console.log("###", `${pair[0]}: ${pair[1]}`);
+  // }
+
   try {
-    // 파일 업로드를 별도로 처리해야 함
-    const postData = {
-      title: formData.value.title,
-      content: formData.value.content,
-    };
-
-    // 파일 첨부는 별도 API 호출 필요
-    // const fileFormData = new FormData();
-    // attachedFiles.value.forEach((file) => {
-    //   fileFormData.append("files", file);
-    // });
-
     if (isEditMode.value) {
       await updatePost(
         formData.value.boardId,
         route.params.postId,
-        postData,
-        attachedFiles.value
+        postFormData
+      );
+
+      router.push(
+        `/board/board/${formData.value.boardId}/${route.params.postId}`
       );
     } else {
-      await createPost(formData.value.boardId, postData, attachedFiles.value);
+      await createPost(formData.value.boardId, postFormData);
+      router.push(`/board/board/${formData.value.boardId}`);
     }
-    router.push(`/board/${formData.value.boardId}`);
-    // 성공 시 해당 게시판 목록으로 이동
-    // router.push(`/`);
   } catch (error) {
     console.error("게시글 처리 실패:", error);
-    alert("게시글 처리에 실패했습니다. 다시 시도해주세요.");
+    alert("게시글 저장 중 오류가 발생했습니다.");
   }
 };
 
-// 파일 초기화
+// const handleSubmit = async () => {
+//   const postFormData = new FormData();
+//   postFormData.append("title", formData.value.title);
+//   postFormData.append("content", formData.value.content);
+
+//   console.log("제출된 이미지 : ", attachedImages.value);
+//   // 첨부된 이미지들을 FormData에 추가
+//   attachedImages.value.forEach((image) => {
+//     postFormData.append("images", image);
+//   });
+
+//   try {
+//     if (isEditMode.value) {
+//       await updatePost(
+//         formData.value.boardId,
+//         route.params.postId,
+//         postFormData
+//       );
+//       router.push(
+//         `/board/board/${formData.value.boardId}/${route.params.postId}`
+//       );
+//     } else {
+//       const response = await createPost(formData.value.boardId, postFormData);
+
+//       router.push(`/board/board/${formData.value.boardId}`);
+//     }
+//   } catch (error) {
+//     console.error("게시글 처리 실패:", error);
+//   }
+// };
+
+// 파일 전체 삭제
 const clearFiles = () => {
-  attachedFiles.value = [];
+  imageUrls.value.forEach((url) => URL.revokeObjectURL(url));
+  imageUrls.value.clear();
+  attachedImages.value = [];
   fileSize.value = 0;
 };
 
@@ -337,6 +436,11 @@ onMounted(() => {
 
 onUnmounted(() => {
   document.removeEventListener("click", closeOnOutsideClick);
+});
+// 컴포넌트 언마운트 시 URL 정리
+onUnmounted(() => {
+  imageUrls.value.forEach((url) => URL.revokeObjectURL(url));
+  imageUrls.value.clear();
 });
 </script>
 
