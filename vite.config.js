@@ -27,4 +27,13 @@ export default defineConfig({
   define: {
     global: "window", // 브라우저 환경에서 global을 window로 매핑
   },
+  build: {
+    minify: true,
+    terserOptions: {
+      compress: {
+        drop_console: true,
+        drop_debugger: true,
+      },
+    },
+  },
 });

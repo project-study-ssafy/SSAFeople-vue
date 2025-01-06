@@ -33,61 +33,56 @@
     <!-- 본문 내용 -->
     <div class="post-content mb-8">
       <!-- 이미지 슬라이드 -->
-      <div v-if="post.images?.length">
+      <div v-if="post.imageUrls?.length" class="mb-8">
         <!-- 메인 스와이퍼 -->
-        <div
-          class="aspect-w-16 aspect-h-9 bg-gray-100 rounded-lg overflow-hidden"
-        >
+        <div class="rounded-lg overflow-hidden">
           <swiper
-            :modules="[Navigation, Thumbs]"
+            :modules="[Navigation, Thumbs, Pagination]"
             :slides-per-view="1"
             :space-between="10"
             :thumbs="{ swiper: thumbsSwiper }"
-            class="mainSwiper mb-4 h-full"
-            :pagination="{ clickable: true }"
+            class="swiper-container main-swiper"
+            :navigation="true"
+            :pagination="pagination"
+            :watch-overflow="true"
+            :auto-height="true"
           >
+            <!--             :pagination="{ clickable: true }" -->
             <swiper-slide
-              v-for="image in post.images"
-              :key="image.fileId"
-              class="flex items-center justify-center"
+              v-for="imageUrl in post.imageUrls"
+              :key="imageUrl"
+              class="slide-container"
             >
-              <img
-                :src="image.fileUrl"
-                :alt="image.fileName"
-                class="w-full object-contain"
-              />
+              <img :src="imageUrl" alt="" class="slide-image" />
             </swiper-slide>
           </swiper>
         </div>
 
-        <!-- 썸네일 스와이퍼 -->
-        <div class="mt-4">
+        <!-- 썸네일 이미지 스와이퍼 -->
+        <div v-if="post.imageUrls.length > 1" class="thumbnail-wrapper">
           <swiper
             @swiper="setThumbsSwiper"
-            :modules="[Navigation, Thumbs]"
-            navigation
-            :slides-per-view="5"
+            :modules="[Thumbs]"
+            :slides-per-view="10"
             :space-between="10"
             :watch-slides-progress="true"
             class="thumbSwiper"
           >
             <swiper-slide
-              v-for="image in post.images"
-              :key="image.fileId"
-              class="cursor-pointer rounded-[20px] overflow-hidden"
+              v-for="imageUrl in post.imageUrls"
+              :key="imageUrl"
+              class="thumb-slide"
             >
-              <img
-                :src="image.fileUrl"
-                :alt="image.fileName"
-                class="w-full h-full object-cover transition duration-200 border-solid border-[1px] border-gray-0 hover:scale-[1.1] hover:border-gray-500"
-              />
+              <img :src="imageUrl" alt="" class="thumb-image" />
             </swiper-slide>
           </swiper>
         </div>
       </div>
 
       <!-- 본문 텍스트 -->
-      {{ post.content }}
+      <div class="text-lg">
+        {{ post.content }}
+      </div>
     </div>
 
     <!-- 스크랩, 추천 -->
@@ -276,7 +271,7 @@ import {
 } from "@/apis/board";
 // 스와이퍼 관련
 import { Swiper, SwiperSlide } from "swiper/vue";
-import { Navigation, Thumbs } from "swiper/modules";
+import { Navigation, Thumbs, Pagination } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/thumbs";
@@ -309,58 +304,18 @@ const boardId = ref(route.params.boardId || 1); // boardId를 ref로 정의
 
 // 게시글 상세 정보 조회
 const fetchPostDetail = async () => {
-  console.log("fetchPostDetail");
   try {
     isLoading.value = true;
     // const boardId = route.params.boardId; // 또는 route.params.boardId 등 적절한 값
-    console.log("route.params.postId : ", route.params.postId);
-    console.log("route.params.boardId : ", route.params.boardId);
+    // console.log("route.params.postId : ", route.params.postId);
+    // console.log("route.params.boardId : ", route.params.boardId);
     const response = await getPostDetail(
       route.params.boardId,
       route.params.postId
     );
     post.value = response.data;
 
-    //임시 더미 이미지 데이터
-    post.value.images = [
-      // {
-      //   fileId: 1,
-      //   fileName: "image1.jpg",
-      //   fileUrl: "https://picsum.photos/800/600?random=1",
-      // },
-      // {
-      //   fileId: 2,
-      //   fileName: "image2.jpg",
-      //   fileUrl: "https://picsum.photos/800/600?random=2",
-      // },
-      // {
-      //   fileId: 3,
-      //   fileName: "image3.jpg",
-      //   fileUrl: "https://picsum.photos/800/600?random=3",
-      // },
-      // {
-      //   fileId: 4,
-      //   fileName: "image4.jpg",
-      //   fileUrl: "https://picsum.photos/800/600?random=4",
-      // },
-      // {
-      //   fileId: 5,
-      //   fileName: "image5.jpg",
-      //   fileUrl: "https://picsum.photos/800/600?random=5",
-      // },
-      // {
-      //   fileId: 6,
-      //   fileName: "image6.jpg",
-      //   fileUrl: "https://picsum.photos/800/600?random=6",
-      // },
-      // {
-      //   fileId: 7,
-      //   fileName: "image7.jpg",
-      //   fileUrl: "https://picsum.photos/800/600?random=7",
-      // },
-    ];
-
-    console.log("post : ", post.value);
+    // console.log("post : ", post.value);
   } catch (error) {
     console.error("게시글 조회 실패:", error);
   } finally {
@@ -380,11 +335,25 @@ const handleEdit = () => {
 // 게시글 삭제
 const handleDelete = async () => {
   try {
-    await deletePost(route.params.boardId, route.params.postId);
-    console.log("게시글 삭제 성공");
-    router.push(`/board/${route.params.boardId}`);
+    const confirmDelete = confirm("게시글을 삭제하시겠습니까?");
+    if (!confirmDelete) return;
+
+    const response = await deletePost(
+      route.params.boardId,
+      route.params.postId
+    );
+
+    // 응답 확인 추가
+    if (response.success) {
+      router.push(`/board/board/${route.params.boardId}`);
+    } else {
+      // 서버에서 삭제 실패 시 메시지 표시
+      alert(response.message || "게시글 삭제에 실패했습니다.");
+    }
   } catch (error) {
-    console.error("게시글 삭제 실패:", error);
+    // 에러 상세 로깅
+    console.error("게시글 삭제 실패:", error.response?.data || error.message);
+    alert("게시글 삭제 중 오류가 발생했습니다.");
   }
 };
 
@@ -400,7 +369,7 @@ const toggleLike = async () => {
     // UI 즉시 업데이트
     post.value.likeCount += isLiked.value ? -1 : 1;
     isLiked.value = !isLiked.value;
-    console.log("Update isLiked : ", isLiked.value);
+    // console.log("Update isLiked : ", isLiked.value);
 
     // 현재 좋아요 상태를 API에 전달
     const response = await togglePostLike(
@@ -419,7 +388,6 @@ const toggleLike = async () => {
     // post.value.likeCount = previousLikeCount;
     // isLiked.value = previousIsLiked;
     console.error("좋아요 처리 실패:", error);
-    console.log("Revoke isLiked : ", isLiked.value);
   }
 };
 
@@ -580,32 +548,56 @@ const setThumbsSwiper = (swiper) => {
 //   comment.replyText = '';
 //   comment.showReplyInput = false;
 // };
+
+// ====================
+// Swiper 관련
+// ====================
+const pagination = {
+  clickable: true,
+  renderBullet: (index, className) => {
+    return '<span class="' + className + '">' + "</span>";
+  },
+};
 </script>
 
-<style>
-/* Swiper 커스텀 스타일 */
-.mainSwiper {
-  @apply w-full;
+<style scoped>
+.swiper-container {
+  width: 100%;
 }
 
-.mainSwiper :deep(.swiper-wrapper) {
-  @apply items-center; /* 슬라이드 내 수직 중앙 정렬 */
+.main-swiper .swiper-wrapper {
+  align-items: center;
+  max-height: 80vh;
 }
 
-.mainSwiper :deep(.swiper-slide) {
-  @apply h-auto; /* 슬라이드 높이 자동 조정 */
-  min-height: 300px; /* 최소 높이 설정 */
-  max-height: 600px; /* 최대 높이 설정 */
+.slide-container {
+  height: 80vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.mainSwiper :deep(.swiper-button-next),
-.mainSwiper :deep(.swiper-button-prev) {
-  @apply text-gray-800 opacity-50 hover:opacity-100 transition-opacity;
+.slide-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
-.mainSwiper :deep(.swiper-button-next)::after,
-.mainSwiper :deep(.swiper-button-prev)::after {
-  @apply text-2xl;
+.swiper-button-next,
+.swiper-button-prev {
+  color: #1f2937;
+  opacity: 0.5;
+  transition: opacity 0.2s;
+}
+
+.swiper-button-next:hover,
+.swiper-button-prev:hover {
+  opacity: 1;
+}
+
+.swiper-button-next::after,
+.swiper-button-prev::after {
+  font-size: 1.5rem;
 }
 
 .thumbSwiper {
@@ -614,26 +606,58 @@ const setThumbsSwiper = (swiper) => {
 
 .thumbSwiper :deep(.swiper-slide) {
   @apply opacity-50 transition-opacity;
-  height: 80px; /* 썸네일 높이 고정 */
+  height: 80px;
 }
 
 .thumbSwiper :deep(.swiper-slide-thumb-active) {
-  @apply opacity-100 ring-2 ring-blue-500 rounded;
+  @apply opacity-100;
 }
 
-/* 반응형 이미지 컨테이너 */
-.aspect-w-16 {
+.thumbnail-wrapper {
+  margin-top: 1rem;
+}
+
+.thumb-slide {
   position: relative;
-  padding-bottom: 56.25%; /* 16:9 비율 */
+  cursor: pointer;
+  width: 5rem !important;
+  height: 5rem !important;
+  overflow: hidden;
+  border-radius: 10px;
 }
 
-.aspect-w-16 > * {
+.thumb-image {
   position: absolute;
-  height: 100%;
-  width: 100%;
   top: 0;
-  right: 0;
-  bottom: 0;
   left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.2s;
+}
+
+.thumb-image:hover {
+  transform: scale(1.1);
+  border-color: #6b7280;
+}
+
+/* 스와이퍼 요소 */
+:deep(.swiper-pagination-bullet) {
+  background-color: #ccc !important;
+}
+
+:deep(.swiper-button-next),
+:deep(.swiper-button-prev) {
+  background-color: rgba(255, 255, 255, 0.8) !important;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  text-align: center;
+}
+:deep(.swiper-button-next:after),
+:deep(.swiper-button-prev:after) {
+  color: #777 !important;
+  font-weight: 700;
+  font-size: 18px;
 }
 </style>

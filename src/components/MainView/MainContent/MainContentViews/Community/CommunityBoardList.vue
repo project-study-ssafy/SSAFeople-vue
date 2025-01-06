@@ -86,32 +86,10 @@ const fetchPosts = async (BoardId, page = currentPage.value) => {
     const response = await getPostsByBoardId(BoardId, postsPerPage.value, page);
 
     // 기존
-    // posts.value = response.data.content;
+    console.log("fetchPosts response", response);
+    posts.value = response.data.content;
     // totalPosts.value = response.data.totalElements;
 
-    // 더미 이미지 랜덤 추가 해서 내리기
-    const dummyImages = [
-      // {
-      //   fileName: "image1.jpg",
-      //   fileUrl: "https://picsum.photos/100/100?random=1",
-      // },
-      // {
-      //   fileName: "image2.jpg",
-      //   fileUrl: "https://picsum.photos/100/100?random=2",
-      // },
-      // {
-      //   fileName: "image3.jpg",
-      //   fileUrl: "https://picsum.photos/100/100?random=3",
-      // },
-    ];
-
-    // 짝수 ID를 가진 게시글에만 이미지 추가
-    const postsWithImages = response.data.content.map((post) => ({
-      ...post,
-      images: post.id % 2 === 0 ? dummyImages : [], // 짝수 ID인 경우에만 이미지 배열 추가
-    }));
-
-    posts.value = postsWithImages;
     totalPosts.value = response.data.totalElements;
   } catch (error) {
     error.value = "게시글을 불러오는데 실패했습니다.";
@@ -135,7 +113,6 @@ const handlePageChange = async (page) => {
 
 const navigateToPost = (postId) => {
   if (!postId) return;
-  console.log("navigateToPost");
   router.push({
     name: "BoardDetail",
     params: {
@@ -157,7 +134,6 @@ watch(
 
 // 초기 데이터 값 세팅
 onMounted(async () => {
-  console.log("currentBoard", currentBoard.value);
   try {
     // 먼저 게시판 목록을 가져옴
     const response = await getBoards();

@@ -29,20 +29,7 @@
       <span class="text-gray-500">{{ error }}</span>
     </div> -->
 
-    <!-- 데이터 테이블 -->
     <div v-if="posts.length >= 0" class="w-full">
-      <!-- 테이블 헤더 -->
-      <!-- <div class="grid grid-cols-8 border-y border-gray-300 bg-gray-50">
-        <div class="col-span-2 px-4 py-3 text-sm">제목</div>
-        <div class="px-4 py-3 text-sm text-center w-24">작성일자</div>
-        <div class="px-4 py-3 text-sm text-center w-24">글쓴이</div>
-        <div class="px-4 py-3 text-sm text-center w-20">댓글</div>
-        <div class="px-4 py-3 text-sm text-center w-20">공감</div>
-        <div class="px-4 py-3 text-sm text-center w-20">스크랩</div>
-        <div class="px-4 py-3 text-sm text-center w-20">조회</div>
-      </div> -->
-
-      <!-- 테이블 본문 -->
       <div class="w-full border-solid border-t-[1px] border-gray-300">
         <!-- 공지사항 -->
         <!-- <div
@@ -77,35 +64,37 @@
 
         <!-- 일반 게시글 -->
         <div
-          v-for="(post, index) in normalPosts"
+          v-for="post in normalPosts"
           :key="`post-${post.id}`"
           class="flex items-center px-4 py-5 hover:bg-[#f7f7f7] cursor-pointer transition-colors border-b border-gray-300"
           @click="handlePostClick(post.id)"
         >
-          <div class="title-nick flex items-start flex-grow">
-            <div class="relative group mr-3">
-              <div
-                v-if="post.images && post.images.length > 0"
-                class="w-[100px] h-[100px] rounded-xl overflow-hidden"
-              >
+          <div class="post-info flex items-start justify-start flex-grow">
+            <!--  이미지 썸네일 영역 -->
+            <div
+              v-if="post.imageUrls && post.imageUrls.length > 0"
+              class="relative group mr-3"
+            >
+              <div class="w-[100px] h-[100px] rounded-xl overflow-hidden">
                 <img
-                  :src="getFirstImageUrl(post.images)"
+                  :src="post.imageUrls[0]"
                   alt="썸네일"
                   class="w-full h-full object-cover"
                 />
                 <div
-                  v-if="post.images && post.images.length > 1"
+                  v-if="post.imageUrls && post.imageUrls.length > 1"
                   class="absolute inset-0 bg-black bg-opacity-50 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity rounded-xl"
                 >
                   <span
                     ><i class="bi bi-copy text-white"></i>
-                    {{ getImageCount(post.images) }}</span
+                    {{ post.imageUrls.length }}</span
                   >
                 </div>
               </div>
             </div>
+            <!--  게시글 정보 영역 -->
             <div class="flex flex-col jutify-between flex-grow">
-              <div class="mb-7">
+              <div class="">
                 <div>
                   <span class="w-24 text-center font-[600] text-gray-600">{{
                     post.nickName
@@ -125,15 +114,15 @@
                 <div class="flex items-center gap-4">
                   <div class="flex items-center gap-1">
                     <i class="bi bi-eye"></i>
-                    <span>{{ formatNumber(post.viewCnt) }}</span>
+                    <span>{{ post.viewCount ? post.viewCount : "0" }}</span>
                   </div>
                   <div class="flex items-center gap-1">
                     <i class="bi bi-chat-dots"></i>
-                    <span>{{ formatNumber(post.commentCnt) }}</span>
+                    <span>{{ post.viewCount ? post.commentCount : "0" }}</span>
                   </div>
                   <div class="flex items-center gap-1">
                     <i class="bi bi-hand-thumbs-up"></i>
-                    <span>{{ formatNumber(post.likes) }}</span>
+                    <span>{{ post.viewCount ? post.likeCount : "0" }}</span>
                   </div>
                 </div>
               </div>
