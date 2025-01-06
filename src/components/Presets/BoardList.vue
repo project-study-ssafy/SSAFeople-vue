@@ -64,7 +64,7 @@
 
         <!-- 일반 게시글 -->
         <div
-          v-for="(post, index) in normalPosts"
+          v-for="post in normalPosts"
           :key="`post-${post.id}`"
           class="flex items-center px-4 py-5 hover:bg-[#f7f7f7] cursor-pointer transition-colors border-b border-gray-300"
           @click="handlePostClick(post.id)"
