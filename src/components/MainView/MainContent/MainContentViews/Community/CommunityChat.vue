@@ -2,6 +2,12 @@
   <div
     class="chat-box bg-white rounded-xl p-4 h-96 border border-gray-300 flex flex-col"
   >
+    <AppHeader v-if="route.params.id == 1" text="익명 채팅방" :type="2" />
+    <AppHeader
+      v-else-if="route.params.id == 2"
+      text="실시간 채팅방"
+      :type="2"
+    />
     <!-- 채팅 메시지 영역 -->
     <div
       class="flex-1 overflow-y-auto mb-4 space-y-2 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent hover:scrollbar-thumb-gray-400"
@@ -13,7 +19,7 @@
         :class="
           message.nickname === 'system'
             ? 'flex justify-center'
-            : message.nickname === userStore.userData.email
+            : message.senderId == userStore.userData.id
               ? 'flex justify-end'
               : 'flex justify-start'
         "
@@ -22,7 +28,7 @@
           :class="[
             message.nickname === 'system'
               ? 'bg-gray-200 text-center'
-              : message.username === userStore.userData.username
+              : message.senderId == userStore.userData.id
                 ? 'bg-blue-100'
                 : 'bg-gray-100',
             'max-w-[70%] rounded-lg px-4 py-2',
@@ -32,7 +38,7 @@
             v-if="message.nickname !== 'system'"
             class="text-xs text-gray-500"
           >
-            {{ message.nickname + " (" + message.nickname + ")" }}
+            {{ message.nickname }}
           </div>
           <div class="text-sm break-all whitespace-pre-wrap overflow-hidden">
             {{ message.content }}
@@ -60,11 +66,11 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted } from "vue";
+import { ref, onMounted, onUnmounted, nextTick } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useUserStore, useAuthStore } from "@/stores/auth";
-import { AppButton } from "@/components";
-import { postChattingNickname } from "@/apis";
+import { AppButton, AppHeader } from "@/components";
+import { postChattingNickname, chattingData } from "@/apis";
 import { Client } from "@stomp/stompjs";
 import Swal from "sweetalert2";
 
@@ -75,11 +81,69 @@ const route = useRoute();
 const router = useRouter();
 const authStore = useAuthStore();
 const userStore = useUserStore();
+const chatContainer = ref(null);
 
-const scrollToBottom = () => {
-  const chatContainer = document.querySelector("#chat-container");
-  if (chatContainer) {
-    chatContainer.scrollTop = chatContainer.scrollHeight;
+const scrollToBottom = async () => {
+  await nextTick();
+  if (chatContainer.value) {
+    chatContainer.value.scrollTop = chatContainer.value.scrollHeight;
+  }
+};
+
+const checkNickName = async () => {
+  Swal.fire({
+    title: "익명 채팅 닉네임을 입력해주세요",
+    input: "text",
+    inputAttributes: {
+      autocapitalize: "off",
+    },
+    showCancelButton: true,
+    confirmButtonText: "저장",
+    confirmButtonColor: "#3396F4",
+    cancelButtonText: "나가기",
+    showLoaderOnConfirm: true,
+    preConfirm: async (nickname) => {
+      try {
+        const response = await postChattingNickname(nickname);
+
+        return response.data;
+      } catch (error) {
+        Swal.showValidationMessage(`
+              Request failed: ${error}
+            `);
+      }
+    },
+    allowOutsideClick: false,
+  }).then((result) => {
+    console.log(result);
+    if (result.isConfirmed) {
+      Swal.fire({
+        icon: "success",
+        title: `반갑습니다! ${result.value.chattingNickname}님.`,
+        showConfirmButton: false,
+        timer: 1500,
+      });
+      userStore.userData.chattingNickname = result.value.chattingNickname;
+      const temp = JSON.parse(sessionStorage.getItem("userData"));
+      temp.chattingNickname = result.value.chattingNickname;
+      console.log(temp);
+      sessionStorage.setItem("userData", JSON.stringify(temp));
+      console.log(userStore.userData);
+      connectStomp();
+    } else if (result.dismiss === "cancel") {
+      router.push("/");
+    }
+  });
+};
+
+const getChattingData = async (id) => {
+  try {
+    const response = await chattingData(id);
+    for (const msg of response.data) {
+      messages.value.push(msg);
+    }
+  } catch (error) {
+    console.log(error);
   }
 };
 
@@ -98,10 +162,10 @@ const connectStomp = () => {
   stompClient.value = new Client({
     brokerURL: "wss://ssafeople.com/chat", // WebSocket URL
     connectHeaders: {
-      accessToken: authStore.token, // 인증 토큰 추가
+      "access-token": authStore.token, // 인증 토큰 추가
     },
-    reconnectDelay: 3000, // 재연결 지연 시간
-    debug: (msg) => console.log("STOMP Debug:", msg), // 디버그 출력
+    reconnectDelay: 5000, // 재연결 지연 시간
+    // debug: (msg) => console.log("STOMP Debug:", msg), // 디버그 출력
     onConnect: () => {
       messages.value.push({
         content: "채팅방에 연결되었습니다.",
@@ -116,9 +180,11 @@ const connectStomp = () => {
         `/sub/chat/room/${route.params.id}`,
         (message) => {
           const data = JSON.parse(message.body);
-          console.log(data);
           messages.value.push(data);
           scrollToBottom();
+        },
+        {
+          "access-token": authStore.token, // 구독 시 토큰 추가
         },
       );
     },
@@ -162,64 +228,31 @@ const sendMessage = () => {
   if (newMessage.value.trim() && stompClient.value?.connected) {
     const messageData = {
       content: newMessage.value,
-      // username: userStore.userData.username,
-      // email: userStore.userData.email,
-      // timestamp: new Date().toISOString(),
     };
 
     stompClient.value.publish({
       destination: `/pub/send/${route.params.id}`,
       body: JSON.stringify(messageData),
+      headers: {
+        "access-token": authStore.token,
+      },
     });
+
     newMessage.value = "";
   }
 };
 
 onMounted(() => {
-  if (route.params.id === "1" && !userStore.userData.chattingNickname) {
-    Swal.fire({
-      title: "익명 채팅 닉네임을 입력해주세요",
-      input: "text",
-      inputAttributes: {
-        autocapitalize: "off",
-      },
-      showCancelButton: true,
-      confirmButtonText: "저장",
-      confirmButtonColor: "#3396F4",
-      cancelButtonText: "나가기",
-      showLoaderOnConfirm: true,
-      preConfirm: async (nickname) => {
-        try {
-          const response = await postChattingNickname(nickname);
-          if (!response.ok) {
-            return Swal.showValidationMessage(`
-                  ${JSON.stringify(await response.json())}
-                `);
-          }
-          return response.json();
-        } catch (error) {
-          Swal.showValidationMessage(`
-                Request failed: ${error}
-              `);
-        }
-      },
-      allowOutsideClick: false,
-    }).then((result) => {
-      console.log(result);
-      if (result.isConfirmed) {
-        Swal.fire({
-          icon: "success",
-          // title: `반갑습니다! ${nickname}님.`,
-          title: `반갑습니다! test님.`,
-          showConfirmButton: false,
-          timer: 1500,
-        });
-        connectStomp();
-      } else if (result.dismiss === "cancel") {
-        router.push("/");
-      }
-    });
+  // 익명채팅
+  if (route.params.id === "1") {
+    getChattingData(route.params.id);
+    if (!userStore.userData.chattingNickname) {
+      checkNickName();
+    }
+  } else if (route.params.id === "2") {
+    getChattingData(route.params.id);
   }
+  connectStomp();
 });
 
 onUnmounted(() => {
