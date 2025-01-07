@@ -179,7 +179,6 @@ const props = defineProps({
   },
 });
 
-console.log("###currentBoard", props.currentBoard);
 //=========================
 // 페이지네이션
 // ========================
@@ -288,10 +287,10 @@ const formatDate = (date) => {
   }
 };
 
-const formatNumber = (num) => {
-  if (!num) return 0;
-  return num > 999 ? `${(num / 1000).toFixed(1)}k` : num;
-};
+// const formatNumber = (num) => {
+//   if (!num) return 0;
+//   return num > 999 ? `${(num / 1000).toFixed(1)}k` : num;
+// };
 
 // const calculatePostNumber = (index) => {
 //   // 남은 게시물 수 계산
