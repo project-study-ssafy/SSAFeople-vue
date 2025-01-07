@@ -373,6 +373,10 @@ const handleSubmit = async () => {
       await createPost(formData.value.boardId, postFormData);
       router.push(`/board/board/${formData.value.boardId}`);
     }
+
+    // 성공 시 해당 게시판 목록으로 이동
+    router.push(`/board/board/${formData.value.boardId}`);
+
   } catch (error) {
     console.error("게시글 처리 실패:", error);
     alert("게시글 저장 중 오류가 발생했습니다.");
