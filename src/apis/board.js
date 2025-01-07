@@ -76,7 +76,8 @@ export const getPostsAll = async (boardId) => {
 // api/v1/boards/{boardId}/posts?page=1&size=15
 export const getPostsByBoardId = async (boardId, postsPerPage, currentPage) => {
   try {
-    console.log(postsPerPage);
+    console.log("####postsPerPage", postsPerPage);
+    console.log("####currentPage", currentPage);
     const response = await boardUrl.get(
       `${import.meta.env.VITE_BOARDS}${boardId}/posts?page=${currentPage}&size=${postsPerPage}`
     );

@@ -8,13 +8,13 @@
     />
 
     <AppButton
-      v-for="page in visiblePages"
+      v-for="page in props.visiblePages"
       :key="page"
       :buttonType="'ellipse-border'"
       @click="$emit('page-change', page)"
       :text="String(page)"
       class=""
-      :class="['pagination-button', currentPage === page ? 'active' : '']"
+      :class="['pagination-button', props.currentPage === page ? 'active' : '']"
     />
 
     <AppButton
@@ -29,10 +29,14 @@
 <script setup>
 import { AppButton } from "@/components";
 
-defineProps({
+const props = defineProps({
   currentPage: {
     type: Number,
     required: true,
+    validator: (value) => {
+      console.log("Current Page Validation:", typeof value);
+      return true;
+    },
   },
   totalPages: {
     type: Number,
@@ -41,8 +45,19 @@ defineProps({
   visiblePages: {
     type: Array,
     required: true,
+    validator: (value) => {
+      console.log("Visible Pages:", typeof value);
+      return true;
+    },
   },
 });
 
 defineEmits(["page-change"]);
 </script>
+
+<style scoped>
+.active {
+  background: var(--ssafy-blue);
+  color: #fff;
+}
+</style>

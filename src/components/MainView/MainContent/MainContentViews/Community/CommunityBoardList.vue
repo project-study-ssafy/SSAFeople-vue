@@ -68,7 +68,7 @@ const currentBoard = computed(() => {
 const visiblePages = computed(() => {
   const total = totalPages.value;
   const current = currentPage.value;
-  const pageSize = 5;
+  const pageSize = 10;
   const half = Math.floor(pageSize / 2);
 
   let start = Math.max(1, current - half);
@@ -104,7 +104,6 @@ const handlePageChange = async (page) => {
   try {
     await fetchPosts(currentBoardId.value, page);
     currentPage.value = page;
-    router.push({ query: { ...route.query, page } });
     window.scrollTo({ top: 0, behavior: "smooth" });
   } catch (error) {
     console.error("페이지 변경 실패:", error);
