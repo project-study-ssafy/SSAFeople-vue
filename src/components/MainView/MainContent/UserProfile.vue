@@ -120,6 +120,7 @@ onMounted(async () => {
       userData.value = userDataResponse.data;
     } catch (error) {
       console.log("유저 데이터를 불러오지 못했습니다.", error);
+      authStore.clearToken();
     }
   } else if (!authStore.token && sessionStorage.getItem("userData")) {
     removeUserDataFromsession();
