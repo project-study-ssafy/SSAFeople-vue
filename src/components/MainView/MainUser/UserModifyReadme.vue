@@ -29,7 +29,7 @@
 
 <script setup>
 import { AppButton, AppHeader } from "@/components";
-import { ref, onMounted } from "vue";
+import { ref, watch } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { modifyReadme } from "@/apis";
 import markdownit from "markdown-it";
@@ -41,6 +41,7 @@ const route = useRoute();
 const props = defineProps({
   userInfo: {},
 });
+
 const emit = defineEmits(["updateReadme"]);
 
 const md = markdownit({
@@ -50,11 +51,6 @@ const md = markdownit({
 
 const markdownText = ref("");
 const renderedMarkdown = ref("");
-
-onMounted(() => {
-  markdownText.value = props.userInfo.readme || "";
-  renderedMarkdown.value = md.render(props.userInfo.readme || "");
-});
 
 const updateMarkdownText = (event) => {
   markdownText.value = event.target.value;
@@ -115,6 +111,18 @@ const modify = async (data) => {
     console.log(error);
   }
 };
+
+// props.userInfo 변경 감지
+watch(
+  () => props.userInfo,
+  (newVal) => {
+    if (newVal?.readme) {
+      markdownText.value = newVal.readme;
+      renderedMarkdown.value = md.render(newVal.readme);
+    }
+  },
+  { immediate: true }, // 컴포넌트가 마운트된 직후에도 실행
+);
 </script>
 
 <style>

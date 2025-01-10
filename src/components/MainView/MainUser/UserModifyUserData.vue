@@ -76,7 +76,7 @@
 </template>
 
 <script setup>
-import { onMounted, ref } from "vue";
+import { ref, watch } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { AppHeader, AppButton } from "@/components";
 import Swal from "sweetalert2";
@@ -94,10 +94,6 @@ const userData = ref({
   username: "",
   nickname: "",
   biography: "",
-});
-
-onMounted(async () => {
-  userData.value = JSON.parse(JSON.stringify(props.userInfo));
 });
 
 const errors = ref({
@@ -172,4 +168,14 @@ const modifyData = async () => {
     });
   }
 };
+
+watch(
+  () => props.userInfo,
+  (newVal) => {
+    if (newVal?.username) {
+      userData.value = props.userInfo;
+    }
+  },
+  { immediate: true }, // 컴포넌트가 마운트된 직후에도 실행
+);
 </script>

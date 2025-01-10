@@ -63,6 +63,7 @@
           id="password"
           v-model="userData.password"
           autocomplete="off"
+          placeholder="비밀번호: 6~12자, 특수문자 포함"
           required
           :class="{ 'border-red-500': errors.password }"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-black outline-none focus:bg-transparent h-10"
@@ -104,7 +105,7 @@
 </template>
 
 <script setup>
-import { onMounted, ref } from "vue";
+import { watch, ref } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { AppHeader, AppButton } from "@/components";
 import Swal from "sweetalert2";
@@ -129,10 +130,6 @@ const userData = ref({
 const status = ref({
   emailVerify: false,
   verificationCode: "",
-});
-
-onMounted(async () => {
-  userData.value = JSON.parse(JSON.stringify(props.userInfo));
 });
 
 const errors = ref({
@@ -298,4 +295,14 @@ const modifyPassword = async () => {
     });
   }
 };
+
+watch(
+  () => props.userInfo,
+  (newVal) => {
+    if (newVal?.username) {
+      userData.value = props.userInfo;
+    }
+  },
+  { immediate: true }, // 컴포넌트가 마운트된 직후에도 실행
+);
 </script>
